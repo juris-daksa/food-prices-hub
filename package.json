@@ -6,16 +6,23 @@
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^1.7.8",
+    "bootstrap": "^5.3.3",
+    "mariadb": "^3.4.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-scripts": "5.0.1",
+    "react-paginate": "^8.2.0",
+    "react-scripts": "^5.0.1",
+    "react-table": "^7.8.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build-css": "sass src/styles/App.scss src/styles/App.css", 
+    "watch-css": "sass --watch src/styles/App.scss src/styles/App.css"
   },
   "eslintConfig": {
     "extends": [

@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Pārtikas cenas",
+  "name": "Tavs pārtikas cenu pārlūks",
   "icons": [
     {
       "src": "favicon.ico",
