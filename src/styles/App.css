@@ -11845,13 +11845,13 @@ textarea.form-control-lg {
   }
 }
 .form-control:focus {
-  border-color: #dddddd;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(175, 175, 175, 0.6);
+  border-color: var(--bs-gray-400);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(108, 117, 125, 0.6);
 }
 
 .form-select:focus {
-  border-color: #dddddd;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(175, 175, 175, 0.6);
+  border-color: var(--bs-gray-400);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(108, 117, 125, 0.6);
 }
 
 .pagination .page-item {
@@ -11861,7 +11861,7 @@ textarea.form-control-lg {
 }
 .pagination .page-item.disabled .page-link {
   background-color: transparent;
-  color: #6c757d;
+  color: var(--bs-secondary-color);
 }
 .pagination .page-item .page-link {
   color: var(--bs-secondary-color);
@@ -11884,7 +11884,6 @@ textarea.form-control-lg {
   width: 40px;
   line-height: 40px;
   border: none;
-  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -11894,12 +11893,31 @@ textarea.form-control-lg {
   color: var(--bs-secondary-color);
 }
 .pagination .page-item .page-number:focus {
-  border-color: #dddddd;
+  border-color: var(--bs-gray-400);
   box-shadow: none;
 }
 .pagination .page-item.active .page-number {
   background: var(--bs-secondary-bg);
   color: var(--bs-secondary-color);
+}
+
+.search-container {
+  position: relative;
+  width: 100%;
+}
+
+.clear-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--bs-tertiary-color);
+}
+.clear-button:hover {
+  color: var(--bs-secondary-color);
+  text-shadow: 0 0 1px var(--bs-secondary-color);
 }
 
 /*# sourceMappingURL=App.css.map */

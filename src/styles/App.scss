@@ -1,13 +1,16 @@
 @import '../../node_modules/bootstrap/scss/bootstrap';
 
+$form-control-focus-border-color: var(--bs-gray-400);
+$form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6); // Gray color with transparency
+
 .form-control:focus {
-  border-color: #dddddd;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(175, 175, 175, 0.6);
+  border-color: $form-control-focus-border-color;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px $form-control-focus-box-shadow-color;
 }
 
 .form-select:focus {
-  border-color: #dddddd;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(175, 175, 175, 0.6);
+  border-color: $form-control-focus-border-color;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px $form-control-focus-box-shadow-color;
 }
 
 .pagination {
@@ -16,56 +19,73 @@
     text-align: center;
     background-color: transparent;
 
-    &.disabled .page-link{
+    &.disabled .page-link {
       background-color: transparent;
-      color: #6c757d; // Grey color for disabled text
+      color: var(--bs-secondary-color); // Grey color for disabled text
     }
 
-    .page-link{
+    .page-link {
       color: var(--bs-secondary-color);
       border: none;
 
-      &:hover{
+      &:hover {
         background-color: transparent;
         text-shadow: 0 0 1px var(--bs-secondary-color);
-        
       }
 
-      &:focus{
+      &:focus {
         background-color: var(--bs-primary-bg);
         border: none;
         box-shadow: none;
       }
     }
 
-  .page-number{
+    .page-number {
       color: var(--bs-secondary-color);
       text-decoration: none;
       display: flex;
       border-radius: 50%;
       width: 40px;
       line-height: 40px;
-      //padding-left: 12px;
       border: none;
-      display: flex;
       justify-content: center;
       align-items: center;
-      
-      &:hover {    
+
+      &:hover {
         background: var(--bs-tertiary-bg);
         border: none;
         color: var(--bs-secondary-color);
       }
 
-      &:focus{
-        border-color: #dddddd;
+      &:focus {
+        border-color: $form-control-focus-border-color;
         box-shadow: none;
       }
     }
 
-    &.active .page-number{ 
+    &.active .page-number {
       background: var(--bs-secondary-bg);
       color: var(--bs-secondary-color);
     }
+  }
+}
+
+.search-container {
+  position: relative;
+  width: 100%;
+}
+
+.clear-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--bs-tertiary-color);
+  
+  &:hover {
+    color: var(--bs-secondary-color);
+    text-shadow: 0 0 1px var(--bs-secondary-color);
   }
 }

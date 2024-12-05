@@ -77,6 +77,10 @@ const ProductsTable = () => {
     usePagination
   );
 
+  const handleClearSearch = () => {
+    setGlobalFilter('');
+  };
+
   if (loading) {
     return (
       <div className="text-center">
@@ -131,13 +135,16 @@ const ProductsTable = () => {
   return (
     <div className="container mt-4">
       <div className='w-50'>
-        <div className="mb-2 mx-2 py-3 w-75">
+        <div className="search-container mb-2 mx-2 py-3 w-75 position-relative">
           <input
             className="form-control"
             value={globalFilter || ''}
             onChange={e => setGlobalFilter(e.target.value || undefined)}
             placeholder="Meklēt"
           />
+          {globalFilter && (
+            <i className="bi bi-x-lg clear-button" onClick={handleClearSearch}></i>
+          )}
         </div>
       </div>
           
