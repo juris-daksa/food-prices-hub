@@ -26,26 +26,31 @@ const ProductsTable = () => {
       {
         Header: 'Produkts',
         accessor: 'title',
+        width: '4'
       },
       {
         Header: 'Kategorija',
-        accessor: 'category'
+        accessor: 'category',
+        width: '2'
       },
       {
         Header: 'Cena, EUR',
         accessor: 'price',
-        Cell: ({ value }) => (typeof value === 'number' ? `$${value.toFixed(2)}` : value)
+        Cell: ({ value }) => (typeof value === 'number' ? `$${value.toFixed(2)}` : value),
+        width: '1'
       },
       {
-        Header: 'Cena pret vienību',
+        Header: 'Cena/vienība',
         accessor: 'comparable_price',
         Cell: ({ row }) => 
-          `${typeof row.original.comparable_price === 'number' ? row.original.comparable_price.toFixed(2) : row.original.comparable_price} EUR/${row.original.unit}`
+          `${typeof row.original.comparable_price === 'number' ? row.original.comparable_price.toFixed(2) : row.original.comparable_price} EUR/${row.original.unit}`,
+        width: '1'
       },
       {
         Header: 'Atlaide',
         accessor: 'discount',
-        Cell: ({ value }) => (typeof value === 'number' ? `-${value}%` : value)
+        Cell: ({ value }) => (typeof value === 'number' ? `-${value}%` : value),
+        width: '1'
       }
     ],
     []
@@ -151,7 +156,7 @@ const ProductsTable = () => {
           {headerGroups.map(headerGroup => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map(column => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                <th {...column.getHeaderProps(column.getSortByToggleProps())} className={`col-${column.width}`}>
                   {column.render('Header')}
                   <span>
                     {column.isSorted
@@ -171,7 +176,7 @@ const ProductsTable = () => {
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map(cell => (
-                  <td {...cell.getCellProps()} className={cell.column.id === 'title' ? 'text-start px-4' : ''}>
+                  <td {...cell.getCellProps()} className={`col-${cell.column.width}`}>
                     {cell.render('Cell')}
                   </td>
                 ))}

@@ -25,3 +25,4 @@ yarn-error.log*
 .env
 server/.env
 src/styles/App.css
+src/styles/App.css.map
