@@ -84,9 +84,7 @@ const ProductsTable = () => {
   if (loading) {
     return (
       <div className="text-center">
-        <div className="spinner-border" role="status">
-          <span className="sr-only">...</span>
-        </div>
+        <div className="spinner-border" role="status"></div> {/* Removed the text */}
       </div>
     );
   }
