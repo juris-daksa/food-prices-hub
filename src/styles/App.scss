@@ -3,11 +3,12 @@
 $form-control-focus-border-color: var(--bs-gray-400);
 $form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6); // Gray color with transparency
 
-.form-control:focus {
-  border-color: $form-control-focus-border-color;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px $form-control-focus-box-shadow-color;
+.form-control {
+  &:focus {
+    border-color: $form-control-focus-border-color;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px $form-control-focus-box-shadow-color;
+  }
 }
-
 .form-select:focus {
   border-color: $form-control-focus-border-color;
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px $form-control-focus-box-shadow-color;
@@ -21,11 +22,12 @@ $form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6); // Gray color wi
 
     &.disabled .page-link {
       background-color: transparent;
-      color: var(--bs-secondary-color); // Grey color for disabled text
+      color: var(--bs-tertiary-color); // Grey color for disabled text
     }
 
     .page-link {
-      color: var(--bs-secondary-color);
+      transition: 200ms;
+      color: var(--bs-primary-color);
       border: none;
 
       &:hover {
@@ -50,11 +52,12 @@ $form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6); // Gray color wi
       border: none;
       justify-content: center;
       align-items: center;
+      transition: 200ms;
 
       &:hover {
         background: var(--bs-tertiary-bg);
         border: none;
-        color: var(--bs-secondary-color);
+        color: var(--bs-primary-color);
       }
 
       &:focus {
@@ -65,7 +68,7 @@ $form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6); // Gray color wi
 
     &.active .page-number {
       background: var(--bs-secondary-bg);
-      color: var(--bs-secondary-color);
+      color: var(--bs-primary-color);
     }
   }
 }
