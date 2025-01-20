@@ -34,22 +34,26 @@ const ProductsTable = () => {
         width: '2'
       },
       {
-        Header: 'Cena, EUR',
+        Header: 'Cena',
         accessor: 'price',
-        Cell: ({ value }) => (typeof value === 'number' ? `$${value.toFixed(2)}` : value),
+        Cell: ({ row }) => {
+          const price = parseFloat(row.original.price);
+          return (
+            <div>
+              {!isNaN(price) ? `€${price.toFixed(2)}` : row.original.price}
+              {row.original.discount && (
+                <span className="badge bg-success ms-2" style={{ fontSize: '0.75em' }}>-{row.original.discount}%</span>
+              )}
+            </div>
+          );
+        },
         width: '1'
       },
       {
         Header: 'Cena/vienība',
         accessor: 'comparable_price',
         Cell: ({ row }) => 
-          `${typeof row.original.comparable_price === 'number' ? row.original.comparable_price.toFixed(2) : row.original.comparable_price} EUR/${row.original.unit}`,
-        width: '1'
-      },
-      {
-        Header: 'Atlaide',
-        accessor: 'discount',
-        Cell: ({ value }) => (typeof value === 'number' ? `-${value}%` : value),
+          `${typeof row.original.comparable_price === 'number' ? row.original.comparable_price.toFixed(2) : row.original.comparable_price} €/${row.original.unit}`,
         width: '1'
       }
     ],
@@ -89,7 +93,7 @@ const ProductsTable = () => {
   if (loading) {
     return (
       <div className="text-center">
-        <div className="spinner-border" role="status"></div> {/* Removed the text */}
+        <div className="spinner-border" role="status"></div>
       </div>
     );
   }
