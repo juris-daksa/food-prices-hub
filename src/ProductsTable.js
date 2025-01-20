@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import axios from 'axios';
 import { useTable, useSortBy, usePagination, useGlobalFilter } from 'react-table';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const ProductsTable = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchValue, setSearchValue] = useState('');   // Added search input state
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -21,7 +22,7 @@ const ProductsTable = () => {
     fetchProducts();
   }, []);
 
-  const columns = React.useMemo(
+  const columns = useMemo(
     () => [
       {
         Header: 'Produkts',
@@ -86,7 +87,28 @@ const ProductsTable = () => {
     usePagination
   );
 
+  const debounce = (func, wait) => {
+    let timeout;
+    return (...args) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func(...args), wait);
+    };
+  };
+
+  const debouncedSetGlobalFilter = useCallback(
+    debounce(value => {
+      setGlobalFilter(value || undefined);
+    }, 300),
+    [setGlobalFilter]
+  );
+
+  const handleSearchChange = (value) => {
+    setSearchValue(value); // Update search input value immediately
+    debouncedSetGlobalFilter(value); // Update global filter with debounce
+  };
+
   const handleClearSearch = () => {
+    setSearchValue('');
     setGlobalFilter('');
   };
 
@@ -145,11 +167,11 @@ const ProductsTable = () => {
         <div className="search-container mb-2 mx-2 py-3 w-75 position-relative">
           <input
             className="form-control"
-            value={globalFilter || ''}
-            onChange={e => setGlobalFilter(e.target.value || undefined)}
+            value={searchValue}
+            onChange={e => handleSearchChange(e.target.value)}
             placeholder="Meklēt"
           />
-          {globalFilter && (
+          {searchValue && (
             <i className="bi bi-x-lg clear-button" onClick={handleClearSearch}></i>
           )}
         </div>
