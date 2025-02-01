@@ -1,17 +1,17 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import axios from 'axios';
+import api from './api';
 import { useTable, useSortBy, usePagination, useGlobalFilter } from 'react-table';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ProductsTable = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchValue, setSearchValue] = useState('');   // Added search input state
+  const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/products');
+        const response = await api.get('/products');
         setProducts(response.data);
         setLoading(false);
       } catch (error) {
@@ -74,7 +74,7 @@ const ProductsTable = () => {
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex, pageSize, globalFilter },
+    state: { pageIndex, pageSize },
     setGlobalFilter
   } = useTable(
     {
@@ -96,15 +96,15 @@ const ProductsTable = () => {
   };
 
   const debouncedSetGlobalFilter = useCallback(
-    debounce(value => {
+    debounce((value) => {
       setGlobalFilter(value || undefined);
     }, 300),
     [setGlobalFilter]
   );
 
   const handleSearchChange = (value) => {
-    setSearchValue(value); // Update search input value immediately
-    debouncedSetGlobalFilter(value); // Update global filter with debounce
+    setSearchValue(value);
+    debouncedSetGlobalFilter(value);
   };
 
   const handleClearSearch = () => {
@@ -124,7 +124,7 @@ const ProductsTable = () => {
     const pageNumberItems = [];
     const totalPages = pageOptions.length;
     const numberOfPageButtons = 5;
-    if (pageIndex < Math.floor(numberOfPageButtons/2)) {
+    if (pageIndex < Math.floor(numberOfPageButtons / 2)) {
       for (let i = 0; i < Math.min(numberOfPageButtons, totalPages); i++) {
         pageNumberItems.push(
           <li key={i} className={"page-item " + (pageIndex === i ? 'active' : '')}>
@@ -134,7 +134,7 @@ const ProductsTable = () => {
           </li>
         );
       }
-    } else if (pageIndex >= totalPages - Math.floor(numberOfPageButtons/2)) {
+    } else if (pageIndex >= totalPages - Math.floor(numberOfPageButtons / 2)) {
       for (let i = totalPages - numberOfPageButtons; i < totalPages; i++) {
         if (i >= 0) {
           pageNumberItems.push(
@@ -147,7 +147,7 @@ const ProductsTable = () => {
         }
       }
     } else {
-      for (let i = pageIndex - Math.floor(numberOfPageButtons/2); i < (pageIndex - Math.floor(numberOfPageButtons/2) + numberOfPageButtons); i++) {
+      for (let i = pageIndex - Math.floor(numberOfPageButtons / 2); i < (pageIndex - Math.floor(numberOfPageButtons / 2) + numberOfPageButtons); i++) {
         pageNumberItems.push(
           <li key={i} className={"page-item " + (pageIndex === i ? 'active' : '')}>
             <a className="page-number" onClick={() => gotoPage(i)} href="#!" aria-label={`Lapa ${i + 1}`}>
@@ -211,34 +211,33 @@ const ProductsTable = () => {
           })}
         </tbody>
       </table>
-        <div className="d-flex justify-content-between">
-          {'Lapa ' + (pageIndex + 1) + ' no ' + pageOptions.length}
-          <div className="justify-content-center">
-            <ul className="pagination" aria-label="Table pagination">
-              <li className={"page-item " + (canPreviousPage ? '' : 'disabled')}>
-                <a className="page-link" onClick={() => previousPage()} href="#!" aria-label="Previous page">Atpakaļ</a>
-              </li>
-              {renderPageNumbers()}
-              <li className={"page-item " + (canNextPage ? '' : 'disabled')}>
-                <a className="page-link" onClick={() => nextPage()} href="#!" aria-label="Next page">Uz priekšu</a>
-              </li>
-            </ul>
-          </div>
-          <div className="d-flex justify-content-end">
-            <select
-              className="form-select form-select-sm mt-2 mb-4"
-              value={pageSize}
-              onChange={e => {
-                setPageSize(Number(e.target.value));
-              }}>
-              {[10, 25, 50].map(pageSize => (
-                <option key={pageSize} value={pageSize}>
-                  Rādīt {pageSize}
-                </option>
-              ))}
-            </select>
-          </div>
+      <div className="d-flex justify-content-between">
+        {'Lapa ' + (pageIndex + 1) + ' no ' + pageOptions.length}
+        <div className="justify-content-center">
+          <ul className="pagination" aria-label="Table pagination">
+            <li className={"page-item " + (canPreviousPage ? '' : 'disabled')}>
+              <a className="page-link" onClick={() => previousPage()} href="#!" aria-label="Previous page">Atpakaļ</a>
+            </li>
+            {renderPageNumbers()}
+            <li className={"page-item " + (canNextPage ? '' : 'disabled')}>
+              <a className="page-link" onClick={() => nextPage()} href="#!" aria-label="Next page">Uz priekšu</a>
+            </li>
+          </ul>
         </div>
+        <div className="d-flex justify-content-end">
+          <select
+            className="form-select form-select-sm mt-2 mb-4"
+            value={pageSize}
+            onChange={e => setPageSize(Number(e.target.value))}
+          >
+            {[10, 25, 50].map(pageSize => (
+              <option key={pageSize} value={pageSize}>
+                Rādīt {pageSize}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
     </div>
   );
 };
