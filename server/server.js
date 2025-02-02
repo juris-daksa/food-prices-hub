@@ -15,14 +15,13 @@ app.use((req, res, next) => {
 });
 
 app.use(cors({
-    origin: process.env.PAGE_HOST,
+    origin: process.env.PAGE_HOST || 'http://localhost:3000',
     methods: 'GET',
     preflightContinue: false,
     optionsSuccessStatus: 204,
     allowedHeaders: ['CF-Access-Client-Id', 'CF-Access-Client-Secret']
 }));
 
-// Database connection details
 const pool = new Pool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -37,10 +36,11 @@ app.get('/products', async (req, res) => {
     try {
         client = await pool.connect();
         const query = `
-            SELECT p.title, c.name as category, cp.price, cp.comparable_price, cp.discount, cp.unit 
+            SELECT p.title, c.name as category, cp.price, cp.comparable_price, cp.discount, cp.unit, s.name as store_name
             FROM products p
             JOIN categories c ON p.category_id = c.id
             JOIN current_prices cp ON p.id = cp.product_id
+            JOIN stores s ON p.store_id = s.id
         `;
         const result = await client.query(query);
         res.json(result.rows);

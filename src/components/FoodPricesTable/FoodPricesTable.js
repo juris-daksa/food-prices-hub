@@ -6,6 +6,10 @@ import SearchBar from './SearchBar';
 import ProductsTable from './ProductsTable';
 import Pagination from './Pagination';
 
+const storeColorMap = {
+  'barbora': 'bg-primary',
+  'rimi': 'bg-danger'
+};
 
 const FoodPricesTable = () => {
   const [products, setProducts] = useState([]);
@@ -32,6 +36,17 @@ const FoodPricesTable = () => {
         Header: 'Produkts',
         accessor: 'title',
         width: '4',
+        Cell: ({ row }) => (
+          <div>
+            <span
+              className={`badge me-2 ${storeColorMap[row.original.store_name] || 'bg-info'}`}
+              style={{ fontSize: '0.75em' }}
+            >
+              {row.original.store_name}
+            </span>
+            {row.original.title}
+          </div>
+        )
       },
       {
         Header: 'Kategorija',
