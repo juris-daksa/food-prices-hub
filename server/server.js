@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cors({
-    origin: process.env.PUBLIC_URL,
+    origin: process.env.PAGE_HOST,
     methods: 'GET',
     preflightContinue: false,
     optionsSuccessStatus: 204,
