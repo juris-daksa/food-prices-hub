@@ -106,19 +106,20 @@ const FoodPricesTable = () => {
     usePagination
   );
 
-  const debounce = (func, wait) => {
+  const debounce = useCallback((func, wait) => {
     let timeout;
     return (...args) => {
       clearTimeout(timeout);
       timeout = setTimeout(() => func(...args), wait);
     };
-  };
+  }, []);
 
-  const debouncedSetGlobalFilter = useCallback(
-    debounce((value) => {
-      setGlobalFilter(value || undefined);
-    }, 300),
-    [setGlobalFilter]
+  const debouncedSetGlobalFilter = useMemo(
+    () =>
+      debounce((value) => {
+        setGlobalFilter(value || undefined);
+      }, 300),
+    [debounce, setGlobalFilter]
   );
 
   const handleSearchChange = useCallback((value) => {
