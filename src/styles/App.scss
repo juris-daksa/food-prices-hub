@@ -14,7 +14,7 @@ $form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6); // Gray color wi
   &:focus {
     border-color: $form-control-focus-border-color;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px $form-control-focus-box-shadow-color;
-  }  
+  }
 }
 
 .pagination {
@@ -76,10 +76,7 @@ $form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6); // Gray color wi
   }
 }
 
-.search-container {
-  position: relative;
-  width: 100%;
-}
+
 
 .clear-button {
   position: absolute;
@@ -89,9 +86,114 @@ $form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6); // Gray color wi
   cursor: pointer;
   font-size: 16px;
   color: var(--bs-tertiary-color);
-  
+
   &:hover {
     color: var(--bs-secondary-color);
     text-shadow: 0 0 1px var(--bs-secondary-color);
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 1000px) {
+  .container {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .column {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .table th,
+  .table td {
+    font-size: 0.9em;
+  }
+
+  .table th:nth-child(2), /* Adjust this if the category column is not the 2nd column */
+  .table td:nth-child(2) {
+    display: none;
+  }
+
+  .table th i {
+    font-size: 0.75em;
+    padding: 0; /* Remove padding for the arrange arrow icon on mobile */
+  }
+
+  .badge {
+    font-size: 0.7em;
+  }
+
+  .pagination-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pagination {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .page-size-selector {
+    display: none;
+  }
+
+  .page-count {
+    font-size: 0.85em;
+  }
+
+  .search-container {
+    width: 100%;
+  }
+}
+
+/* Tablet and Desktop Styles */
+@media (min-width: 1001px) {
+  .container {
+    width: 80%;
+    margin: auto;
+  }
+
+  .column {
+    width: 48%;
+    float: left;
+    margin-right: 4%;
+  }
+
+  .column:last-child {
+    margin-right: 0;
+  }
+
+  .pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    .page-count {
+      align-self: flex-start;
+    }
+
+    .pagination {
+      order: 1;
+      flex-direction: row;
+    }
+  }
+
+  .page-size-selector {
+    order: 2;
+    display: inline-block;
+  }
+
+  .page-count {
+    order: 0;
+  }
+
+  .table th i {
+    padding: 0.5rem; /* Add padding for the arrange arrow icon on desktop */
+  }
+
+  .search-container {
+    width: 36%;
+    padding-inline: 3px;
   }
 }

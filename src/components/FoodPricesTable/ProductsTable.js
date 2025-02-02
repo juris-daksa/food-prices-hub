@@ -16,8 +16,8 @@ const ProductsTable = ({ getTableProps, getTableBodyProps, headerGroups, prepare
                     <span>
                       {column.isSorted
                         ? column.isSortedDesc
-                          ? <i className="bi bi-arrow-down px-2"></i>
-                          : <i className="bi bi-arrow-up px-2"></i>
+                          ? <i className="bi bi-arrow-down arrange-icon"></i>
+                          : <i className="bi bi-arrow-up arrange-icon"></i>
                         : ''}
                     </span>
                   </th>

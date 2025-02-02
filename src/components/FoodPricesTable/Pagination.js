@@ -11,11 +11,11 @@ const Pagination = ({
   pageSize,
   setPageSize
 }) => {
-
   const renderPageNumbers = () => {
     const pageNumberItems = [];
     const totalPages = pageOptions.length;
-    const numberOfPageButtons = 5;
+    const numberOfPageButtons = window.innerWidth < 1000 ? 3 : 5;
+
     if (pageIndex < Math.floor(numberOfPageButtons / 2)) {
       for (let i = 0; i < Math.min(numberOfPageButtons, totalPages); i++) {
         pageNumberItems.push(
@@ -54,9 +54,11 @@ const Pagination = ({
   };
 
   return (
-    <div className="d-flex justify-content-between">
-      {'Lapa ' + (pageIndex + 1) + ' no ' + pageOptions.length}
-      <div className="justify-content-center">
+    <div className="pagination-container">
+      <div className="page-count">
+        <span>{'Lapa ' + (pageIndex + 1) + ' no ' + pageOptions.length}</span>
+      </div>
+      <div className="pagination justify-content-center">
         <ul className="pagination" aria-label="Table pagination">
           <li className={"page-item " + (canPreviousPage ? '' : 'disabled')}>
             <a className="page-link" onClick={() => previousPage()} href="#!" aria-label="Previous page">Atpakaļ</a>
@@ -67,7 +69,7 @@ const Pagination = ({
           </li>
         </ul>
       </div>
-      <div className="d-flex justify-content-end">
+      <div className={`page-size-selector ${window.innerWidth < 1000 ? 'hidden' : ''}`}>
         <select
           className="form-select form-select-sm mt-2 mb-4"
           value={pageSize}

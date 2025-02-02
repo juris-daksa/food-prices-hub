@@ -1,11 +1,12 @@
-// src/components/FoodPricesTable/FoodPricesTable.js
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import api from '../../api';
 import { useTable, useSortBy, usePagination, useGlobalFilter } from 'react-table';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../../styles/App.css'; 
 import SearchBar from './SearchBar';
 import ProductsTable from './ProductsTable';
 import Pagination from './Pagination';
+import { debounce, customSort } from '../../utils';
 
 const storeColorMap = {
   'barbora': 'bg-primary',
@@ -87,11 +88,7 @@ const FoodPricesTable = () => {
             : '-';
         },
         width: '1',
-        sortType: (rowA, rowB) => {
-          const a = rowA.original.comparable_price != null ? parseFloat(rowA.original.comparable_price) : Infinity;
-          const b = rowB.original.comparable_price != null ? parseFloat(rowB.original.comparable_price) : Infinity;
-          return a - b;
-        }
+        sortType: customSort
       }
     ],
     []
@@ -123,14 +120,6 @@ const FoodPricesTable = () => {
     usePagination
   );
 
-  const debounce = useCallback((func, wait) => {
-    let timeout;
-    return (...args) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func(...args), wait);
-    };
-  }, []);
-
   const debouncedSetGlobalFilter = useMemo(
     () =>
       debounce((value) => {
@@ -157,9 +146,29 @@ const FoodPricesTable = () => {
     );
   }
 
+  const productsTableProps = {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    prepareRow,
+    page
+  };
+
+  const paginationProps = {
+    pageIndex,
+    pageOptions,
+    canPreviousPage,
+    canNextPage,
+    previousPage,
+    nextPage,
+    gotoPage,
+    pageSize,
+    setPageSize
+  };
+
   return (
     <div className="container mt-4">
-      <div className='w-50'>
+      <div className="search-container">
         <SearchBar
           searchValue={searchValue}
           handleSearchChange={handleSearchChange}
@@ -167,25 +176,11 @@ const FoodPricesTable = () => {
         />
       </div>
           
-      <ProductsTable
-        getTableProps={getTableProps}
-        getTableBodyProps={getTableBodyProps}
-        headerGroups={headerGroups}
-        prepareRow={prepareRow}
-        page={page}
-      />
+      <div className="table-responsive">
+        <ProductsTable {...productsTableProps} />
+      </div>
 
-      <Pagination
-        pageIndex={pageIndex}
-        pageOptions={pageOptions}
-        canPreviousPage={canPreviousPage}
-        canNextPage={canNextPage}
-        previousPage={previousPage}
-        nextPage={nextPage}
-        gotoPage={gotoPage}
-        pageSize={pageSize}
-        setPageSize={setPageSize}
-      />
+      <Pagination {...paginationProps} />
     </div>
   );
 };
