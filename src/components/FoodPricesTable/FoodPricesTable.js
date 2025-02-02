@@ -1,3 +1,4 @@
+// src/components/FoodPricesTable/FoodPricesTable.js
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import api from '../../api';
 import { useTable, useSortBy, usePagination, useGlobalFilter } from 'react-table';
@@ -20,7 +21,15 @@ const FoodPricesTable = () => {
     const fetchProducts = async () => {
       try {
         const response = await api.get('/products');
-        setProducts(response.data);
+        const data = response.data;
+
+        // Validate the data structure
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else {
+          console.error('Data is not an array:', data);
+        }
+        
         setLoading(false);
       } catch (error) {
         console.error('Error fetching products:', error);
