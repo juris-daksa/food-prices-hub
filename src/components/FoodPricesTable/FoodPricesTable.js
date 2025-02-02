@@ -1,3 +1,4 @@
+// src/components/FoodPricesTable/FoodPricesTable.js
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import api from '../../api';
 import { useTable, useSortBy, usePagination, useGlobalFilter } from 'react-table';
@@ -20,7 +21,14 @@ const FoodPricesTable = () => {
     const fetchProducts = async () => {
       try {
         const response = await api.get('/products');
-        setProducts(response.data);
+        const data = response.data;
+
+        if (Array.isArray(data)) {
+          setProducts(data);
+        } else {
+          console.error('Data is not an array:', data);
+        }
+        
         setLoading(false);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -72,9 +80,18 @@ const FoodPricesTable = () => {
       {
         Header: 'Cena/vienība',
         accessor: 'comparable_price',
-        Cell: ({ row }) => 
-          `${typeof row.original.comparable_price === 'number' ? row.original.comparable_price.toFixed(2) : row.original.comparable_price} €/${row.original.unit}`,
-        width: '1'
+        Cell: ({ row }) => {
+          const comparablePrice = row.original.comparable_price != null ? row.original.comparable_price : '-';
+          return comparablePrice !== '-'
+            ? `${typeof comparablePrice === 'number' ? comparablePrice.toFixed(2) : comparablePrice} €/${row.original.unit}`
+            : '-';
+        },
+        width: '1',
+        sortType: (rowA, rowB) => {
+          const a = rowA.original.comparable_price != null ? parseFloat(rowA.original.comparable_price) : Infinity;
+          const b = rowB.original.comparable_price != null ? parseFloat(rowB.original.comparable_price) : Infinity;
+          return a - b;
+        }
       }
     ],
     []
