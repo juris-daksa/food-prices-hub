@@ -6,7 +6,7 @@ Food Prices Hub is a web application that allows users to track and compare food
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/your-username/food-prices-hub.git
+    git clone https://github.com/juris-daksa/food-prices-hub.git
     ```
 2. For the API server:
 
