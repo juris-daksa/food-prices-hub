@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import api from '../../api';
 import { useTable, useSortBy, usePagination, useGlobalFilter } from 'react-table';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../styles/App.css'; 
+import '../../styles/App.css';  // Existing stylesheet
 import SearchBar from './SearchBar';
 import ProductsTable from './ProductsTable';
 import Pagination from './Pagination';
@@ -29,7 +29,7 @@ const FoodPricesTable = () => {
         } else {
           console.error('Data is not an array:', data);
         }
-        
+
         setLoading(false);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -140,7 +140,7 @@ const FoodPricesTable = () => {
 
   if (loading) {
     return (
-      <div className="text-center">
+      <div className="spinner-container">
         <div className="spinner-border" role="status"></div>
       </div>
     );
@@ -175,7 +175,7 @@ const FoodPricesTable = () => {
           handleClearSearch={handleClearSearch}
         />
       </div>
-          
+
       <div className="table-responsive">
         <ProductsTable {...productsTableProps} />
       </div>

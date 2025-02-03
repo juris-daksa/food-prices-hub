@@ -1,7 +1,7 @@
 @import '../../node_modules/bootstrap/scss/bootstrap';
 
 $form-control-focus-border-color: var(--bs-gray-400);
-$form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6); // Gray color with transparency
+$form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6); 
 
 .form-control {
   &:focus {
@@ -25,7 +25,7 @@ $form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6); // Gray color wi
 
     &.disabled .page-link {
       background-color: transparent;
-      color: var(--bs-tertiary-color); // Grey color for disabled text
+      color: var(--bs-tertiary-color); 
     }
 
     .page-link {
@@ -76,6 +76,12 @@ $form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6); // Gray color wi
   }
 }
 
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 
 
 .clear-button {
@@ -110,14 +116,14 @@ $form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6); // Gray color wi
     font-size: 0.9em;
   }
 
-  .table th:nth-child(2), /* Adjust this if the category column is not the 2nd column */
+  .table th:nth-child(2), 
   .table td:nth-child(2) {
     display: none;
   }
 
   .table th i {
     font-size: 0.75em;
-    padding: 0; /* Remove padding for the arrange arrow icon on mobile */
+    padding: 0; 
   }
 
   .badge {
@@ -189,7 +195,7 @@ $form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6); // Gray color wi
   }
 
   .table th i {
-    padding: 0.5rem; /* Add padding for the arrange arrow icon on desktop */
+    padding: 0.5rem; 
   }
 
   .search-container {
