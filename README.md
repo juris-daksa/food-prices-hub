@@ -8,38 +8,63 @@ Food Prices Hub is a web application that allows users to track and compare food
     ```bash
     git clone https://github.com/your-username/food-prices-hub.git
     ```
-2. Navigate to the project directory:
+2. For the API server:
+
+    a. In a new terminal instance navigate to server directory.
     ```bash
-    cd food-prices-hub
+    cd food-prices-hub/server
     ```
-3. Install dependencies:
+    b. Install dependencies
     ```bash
     npm install
     ```
-4. Start the application:
+    c. Start the app.
     ```bash
     npm start
     ```
+4. For the client:
+
+    a. Navigate to project directory.
+    ```bash
+    cd food-prices-hub
+    ```
+    b. Install dependencies.
+    ```bash
+    npm install
+    ```
+    c. Compile CSS stylesheet.
+    ```bash
+    npm run build-css
+    ```
+    d. Start the client.
+    ```bash
+    npm start
+    ```
+5. Finally, navigate to your client app in a browser (default URL is `http://localhost:3000`).
+
 
 ## Usage
 
 1. Open your web browser and go to `http://localhost:3000`.
 2. Use the search bar to find food items.
+3. Sort the results by clicking on the column headers. 
 
 ## Requirements
 
 - A PostgreSQL database instance is required.
-- A `.env` file needs to be provided with the following environment variables:
+- A `.env` file needs to be provided inside project root directory with the following environment variables:
     ```plaintext
     DB_HOST=your_database_host
     DB_PORT=your_database_port
     DB_USER=your_database_user
     DB_PASSWORD=your_database_password
     DB_NAME=your_database_name
-    API_HOST=your_api_host
-    CLIENT_HOST=your_client_host
+    
+    LOCAL_HOST=http://localhost:3000
+    PUBLIC_HOST=your_public_host
+    REACT_APP_API_HOST=http://localhost:5000    // Your database API endpoint
     ```
-
+- Use [food-prices-scraper](https://github.com/juris-daksa/food-prices-scraper) to collect data.
 ## Contributing
 
 Contributions are welcome! Please fork the repository and create a pull request with your changes.
