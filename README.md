@@ -64,7 +64,8 @@ Food Prices Hub is a web application that allows users to track and compare food
     PUBLIC_HOST=your_public_host
     REACT_APP_API_HOST=http://localhost:5000    // Your database API endpoint
     ```
-- Use [food-prices-scraper](https://github.com/juris-daksa/food-prices-scraper) to collect data.
+- Data. Use [food-prices-scraper](https://github.com/juris-daksa/food-prices-scraper) to collect some.
+- Basic understanding of Latvian language.
 ## Contributing
 
 Contributions are welcome! Please fork the repository and create a pull request with your changes.
