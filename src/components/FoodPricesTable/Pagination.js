@@ -15,39 +15,30 @@ const Pagination = ({
     const pageNumberItems = [];
     const totalPages = pageOptions.length;
     const numberOfPageButtons = window.innerWidth < 1000 ? 3 : 5;
+    const halfButtons = Math.floor(numberOfPageButtons / 2);
 
-    if (pageIndex < Math.floor(numberOfPageButtons / 2)) {
-      for (let i = 0; i < Math.min(numberOfPageButtons, totalPages); i++) {
-        pageNumberItems.push(
-          <li key={i} className={"page-item " + (pageIndex === i ? 'active' : '')}>
-            <a className="page-number" onClick={() => gotoPage(i)} href="#!" aria-label={`Lapa ${i + 1}`}>
-              {i + 1}
-            </a>
-          </li>
-        );
-      }
-    } else if (pageIndex >= totalPages - Math.floor(numberOfPageButtons / 2)) {
-      for (let i = totalPages - numberOfPageButtons; i < totalPages; i++) {
-        if (i >= 0) {
-          pageNumberItems.push(
-            <li key={i} className={"page-item " + (pageIndex === i ? 'active' : '')}>
-              <a className="page-number" onClick={() => gotoPage(i)} href="#!" aria-label={`Lapa ${i + 1}`}>
-                {i + 1}
-              </a>
-            </li>
-          );
-        }
-      }
-    } else {
-      for (let i = pageIndex - Math.floor(numberOfPageButtons / 2); i < (pageIndex - Math.floor(numberOfPageButtons / 2) + numberOfPageButtons); i++) {
-        pageNumberItems.push(
-          <li key={i} className={"page-item " + (pageIndex === i ? 'active' : '')}>
-            <a className="page-number" onClick={() => gotoPage(i)} href="#!" aria-label={`Lapa ${i + 1}`}>
-              {i + 1}
-            </a>
-          </li>
-        );
-      }
+    const startPage = Math.max(
+      0,
+      Math.min(pageIndex - halfButtons, totalPages - numberOfPageButtons)
+    );
+    const endPage = Math.min(totalPages, startPage + numberOfPageButtons);
+
+    for (let i = startPage; i < endPage; i++) {
+      pageNumberItems.push(
+        <li
+          key={i}
+          className={"page-item " + (pageIndex === i ? "active" : "")}
+        >
+          <a
+            className="page-number"
+            onClick={() => gotoPage(i)}
+            href="#!"
+            aria-label={`Lapa ${i + 1}`}
+          >
+            {i + 1}
+          </a>
+        </li>
+      );
     }
 
     return pageNumberItems;
