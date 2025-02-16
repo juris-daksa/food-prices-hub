@@ -44,14 +44,45 @@ app.get('/products', async (req, res) => {
   try {
     client = await pool.connect();
     const query = `
-      SELECT p.title, c.name as category, cp.price, cp.comparable_price, cp.discount, cp.unit, s.name as store_name
+      SELECT p.id as product_id, p.title, p.product_url, c.name as category, 
+        cep.retail_price, cep.discount_price, cep.loyalty_price, 
+        cep.retail_comparable_price, cep.discount_comparable_price, cep.loyalty_comparable_price, 
+        cep.unit, cep.date_updated as date_price_updated, 
+        cep.discount_percentage, cep.loyalty_discount_percentage, s.name as store_name
       FROM products p
       JOIN categories c ON p.category_id = c.id
-      JOIN current_prices cp ON p.id = cp.product_id
+      JOIN current_extended_prices cep ON p.id = cep.product_id
       JOIN stores s ON p.store_id = s.id
     `;
     const result = await client.query(query);
-    res.json(result.rows);
+    
+    const transformedResult = result.rows.map(row => ({
+      product_id: row.product_id,
+      title: row.title,
+      product_url: row.product_url,
+      category: row.category,
+      store_name: row.store_name,
+      prices: {
+        retail: {
+          price: row.retail_price,
+          comparable: row.retail_comparable_price
+        },
+        discount: row.discount_price ? {
+          price: row.discount_price,
+          comparable: row.discount_comparable_price,
+          discount_percentage: row.discount_percentage
+        } : null,
+        loyalty: row.loyalty_price ? {
+          price: row.loyalty_price,
+          comparable: row.loyalty_comparable_price,
+          loyalty_discount_percentage: row.loyalty_discount_percentage
+        } : null,
+        unit: row.unit,
+        date_price_updated: row.date_price_updated
+      }
+    }));
+
+    res.json(transformedResult);
   } catch (err) {
     console.error('Error fetching products:', err);
     res.status(500).send('Server error');
