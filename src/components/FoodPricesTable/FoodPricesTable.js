@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import api from '../../api';
 import { useTable, useSortBy, usePagination, useGlobalFilter } from 'react-table';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../styles/App.css';  // Existing stylesheet
+import '../../styles/App.css';
 import SearchBar from './SearchBar';
 import ProductsTable from './ProductsTable';
 import Pagination from './Pagination';
