@@ -64,7 +64,7 @@ const FoodPricesTable = () => {
       },
       {
         Header: 'Cena',
-        accessor: 'price',
+        accessor: 'displayPrice',
         Cell: ({ row }) => {
           const price = parseFloat(row.original.price);
           return (
@@ -76,11 +76,11 @@ const FoodPricesTable = () => {
             </div>
           );
         },
-        width: '1'
+        sortType: createCustomSort('displayPrice')
       },
       {
         Header: 'Cena/vienība',
-        accessor: 'comparable_price',
+        accessor: 'displayComparablePrice',
         Cell: ({ row }) => {
           const comparablePrice = row.original.comparable_price != null ? row.original.comparable_price : '-';
           return comparablePrice !== '-'
@@ -88,7 +88,7 @@ const FoodPricesTable = () => {
             : '-';
         },
         width: '1',
-        sortType: customSort
+        sortType: createCustomSort('displayComparablePrice')
       }
     ],
     []
