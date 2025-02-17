@@ -17,6 +17,15 @@ $form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6);
   }
 }
 
+.form-check-input{
+  accent-color: green;
+
+  &:focus {
+    border-color: $form-control-focus-border-color;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px $form-control-focus-box-shadow-color;
+  }
+}
+
 .pagination {
   .page-item {
     padding-inline: 2px;
@@ -29,7 +38,7 @@ $form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6);
     }
 
     .page-link {
-      transition: 200ms;
+      transition: 100ms;
       color: var(--bs-primary-color);
       border: none;
 
@@ -160,6 +169,15 @@ $form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6);
     margin: auto;
   }
 
+  .table th{
+    font-size: 0.92rem;
+  }
+
+  .table th i {
+    font-size: 0.75em;
+    padding: 0.1rem; 
+  }
+
   .column {
     width: 48%;
     float: left;
@@ -167,6 +185,7 @@ $form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6);
   }
 
   .column:last-child {
+    font-size: 70%;
     margin-right: 0;
   }
 
@@ -192,10 +211,6 @@ $form-control-focus-box-shadow-color: rgba(108, 117, 125, 0.6);
 
   .page-count {
     order: 0;
-  }
-
-  .table th i {
-    padding: 0.5rem; 
   }
 
   .search-container {

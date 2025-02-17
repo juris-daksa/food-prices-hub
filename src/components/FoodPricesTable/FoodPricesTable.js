@@ -6,17 +6,29 @@ import '../../styles/App.css';
 import SearchBar from './SearchBar';
 import ProductsTable from './ProductsTable';
 import Pagination from './Pagination';
-import { debounce, customSort } from '../../utils';
+import { debounce, createCustomSort } from '../../utils';
 
+// TODO: remove hardcoded colors
 const storeColorMap = {
   'barbora': 'bg-primary',
   'rimi': 'bg-danger'
 };
 
+const accessors = {
+  title: 'title',
+  category: 'category',
+  retailPrice: 'prices.retail.price',
+  comparablePrice: 'prices.retail.comparable'
+};
+
 const FoodPricesTable = () => {
   const [products, setProducts] = useState([]);
+  const [displayedProducts, setDisplayedProducts] = useState([]);
+  const [showDiscountPrice, setShowDiscountPrice] = useState(true);
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState('');
+  const [pageIndex, setPageIndex] = useState(0);
+  const [pageSize, setPageSizeState] = useState(10); // Add state for page size
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -26,6 +38,11 @@ const FoodPricesTable = () => {
 
         if (Array.isArray(data)) {
           setProducts(data);
+          setDisplayedProducts(data.map(product => ({
+            ...product,
+            displayPrice: product.prices.retail.price,
+            displayComparablePrice: product.prices.retail.comparable
+          })));
         } else {
           console.error('Data is not an array:', data);
         }
@@ -39,11 +56,20 @@ const FoodPricesTable = () => {
     fetchProducts();
   }, []);
 
+  const updateDisplayedProducts = useCallback((data, showDiscount) => {
+    const updatedData = data.map(product => ({
+      ...product,
+      displayPrice: showDiscount && product.prices.discount?.price != null ? product.prices.discount.price : product.prices.retail.price,
+      displayComparablePrice: showDiscount && product.prices.discount?.comparable != null ? product.prices.discount.comparable : product.prices.retail.comparable
+    }));
+    setDisplayedProducts(updatedData);
+  }, []);
+
   const columns = useMemo(
     () => [
       {
         Header: 'Produkts',
-        accessor: 'title',
+        accessor: accessors.title,
         width: '4',
         Cell: ({ row }) => (
           <div>
@@ -59,39 +85,40 @@ const FoodPricesTable = () => {
       },
       {
         Header: 'Kategorija',
-        accessor: 'category',
+        accessor: accessors.category,
         width: '2'
       },
       {
         Header: 'Cena',
         accessor: 'displayPrice',
         Cell: ({ row }) => {
-          const price = parseFloat(row.original.price);
+          const price = parseFloat(row.original.displayPrice);
           return (
             <div>
-              {!isNaN(price) ? `€${price.toFixed(2)}` : row.original.price}
-              {row.original.discount && (
-                <span className="badge bg-success ms-2" style={{ fontSize: '0.75em' }}>-{row.original.discount}%</span>
+              {!isNaN(price) ? `€${price.toFixed(2)}` : '-'}
+              {showDiscountPrice && row.original.prices.discount && row.original.prices.discount.discount_percentage && (
+                <span className="badge bg-success ms-2" style={{ fontSize: '0.75em' }}>-{row.original.prices.discount.discount_percentage}%</span>
               )}
             </div>
           );
         },
+        width: '1',
         sortType: createCustomSort('displayPrice')
       },
       {
-        Header: 'Cena/vienība',
+        Header: 'Par vienību',
         accessor: 'displayComparablePrice',
         Cell: ({ row }) => {
-          const comparablePrice = row.original.comparable_price != null ? row.original.comparable_price : '-';
+          const comparablePrice = row.original.displayComparablePrice != null ? parseFloat(row.original.displayComparablePrice) : '-';
           return comparablePrice !== '-'
-            ? `${typeof comparablePrice === 'number' ? comparablePrice.toFixed(2) : comparablePrice} €/${row.original.unit}`
+            ? `${typeof comparablePrice === 'number' ? comparablePrice.toFixed(2) : comparablePrice} €/${row.original.prices.unit}`
             : '-';
         },
         width: '1',
         sortType: createCustomSort('displayComparablePrice')
       }
     ],
-    []
+    [showDiscountPrice]
   );
 
   const {
@@ -106,37 +133,76 @@ const FoodPricesTable = () => {
     gotoPage,
     nextPage,
     previousPage,
-    setPageSize,
-    state: { pageIndex, pageSize },
-    setGlobalFilter
+    state,
+    setGlobalFilter,
+    setPageSize: setTablePageSize
   } = useTable(
     {
       columns,
-      data: products,
-      initialState: { pageIndex: 0 }
+      data: displayedProducts,
+      initialState: { pageIndex, pageSize } // Initialize with current page index and page size
     },
     useGlobalFilter,
     useSortBy,
     usePagination
   );
 
-  const debouncedSetGlobalFilter = useMemo(
-    () =>
-      debounce((value) => {
-        setGlobalFilter(value || undefined);
-      }, 300),
-    [debounce, setGlobalFilter]
+  const debouncedSetGlobalFilter = useMemo(() =>
+    debounce((value) => {
+      setGlobalFilter(value || undefined);
+    }, 300),
+    [setGlobalFilter]
   );
+
+  useEffect(() => {
+    updateDisplayedProducts(products, showDiscountPrice);
+    debouncedSetGlobalFilter(searchValue); // Apply search filter after updating displayed products
+  }, [products, showDiscountPrice, searchValue, updateDisplayedProducts, debouncedSetGlobalFilter]);
+
+  const handleCheckboxChange = useCallback(() => {
+    setShowDiscountPrice(prev => !prev);
+  }, []);
 
   const handleSearchChange = useCallback((value) => {
     setSearchValue(value);
+    setPageIndex(0); // Reset page index to 0 when searching
     debouncedSetGlobalFilter(value);
   }, [debouncedSetGlobalFilter]);
 
   const handleClearSearch = useCallback(() => {
     setSearchValue('');
+    setPageIndex(0); // Reset page index to 0 when clearing search
     setGlobalFilter('');
   }, [setGlobalFilter]);
+
+  const handlePageSizeChange = useCallback((newPageSize) => {
+    setPageSizeState(newPageSize);
+    setTablePageSize(newPageSize);
+  }, [setTablePageSize]);
+
+  useEffect(() => {
+    setPageIndex(state.pageIndex); // Preserve page index
+  }, [state.pageIndex]);
+
+  const productsTableProps = useMemo(() => ({
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    prepareRow,
+    page
+  }), [getTableProps, getTableBodyProps, headerGroups, prepareRow, page]);
+
+  const paginationProps = useMemo(() => ({
+    pageIndex,
+    pageOptions,
+    canPreviousPage,
+    canNextPage,
+    previousPage,
+    nextPage,
+    gotoPage,
+    pageSize,
+    setPageSize: handlePageSizeChange
+  }), [pageIndex, pageOptions, canPreviousPage, canNextPage, previousPage, nextPage, gotoPage, pageSize, handlePageSizeChange]);
 
   if (loading) {
     return (
@@ -146,26 +212,6 @@ const FoodPricesTable = () => {
     );
   }
 
-  const productsTableProps = {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    prepareRow,
-    page
-  };
-
-  const paginationProps = {
-    pageIndex,
-    pageOptions,
-    canPreviousPage,
-    canNextPage,
-    previousPage,
-    nextPage,
-    gotoPage,
-    pageSize,
-    setPageSize
-  };
-
   return (
     <div className="container mt-4">
       <div className="search-container">
@@ -174,6 +220,20 @@ const FoodPricesTable = () => {
           handleSearchChange={handleSearchChange}
           handleClearSearch={handleClearSearch}
         />
+        <div className="filter-section mb-2">
+          <div className="form-check">
+            <input 
+              className="form-check-input" 
+              type="checkbox" 
+              checked={showDiscountPrice} 
+              onChange={handleCheckboxChange} 
+              id="showDiscountPriceCheckbox" 
+            />
+            <label className="form-check-label" htmlFor="showDiscountPriceCheckbox">
+              Atlaižu cenas
+            </label>
+          </div>
+        </div>
       </div>
 
       <div className="table-responsive">
