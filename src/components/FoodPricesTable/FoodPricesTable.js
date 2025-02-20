@@ -1,66 +1,49 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import api from '../../api';
-import { useTable, useSortBy, usePagination, useGlobalFilter } from 'react-table';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../styles/App.css';
-import SearchBar from './SearchBar';
-import ProductsTable from './ProductsTable';
-import Pagination from './Pagination';
-import { debounce, createCustomSort } from '../../utils';
+import React, { useMemo, useCallback, useEffect, useState } from "react";
+import {
+  useTable,
+  useSortBy,
+  usePagination,
+  useGlobalFilter,
+} from "react-table";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "../../styles/App.css";
+import SearchBar from "./SearchBar";
+import ProductsTable from "./ProductsTable";
+import Pagination from "./Pagination";
+import { debounce, createCustomSort } from "../../utils";
+import useFetchProducts from "../../hooks/useFetchProducts";
 
-// TODO: remove hardcoded colors
 const storeColorMap = {
-  'barbora': 'bg-primary',
-  'rimi': 'bg-danger'
+  barbora: "bg-primary",
+  rimi: "bg-danger",
 };
 
 const accessors = {
-  title: 'title',
-  category: 'category',
-  retailPrice: 'prices.retail.price',
-  comparablePrice: 'prices.retail.comparable'
+  title: "title",
+  category: "category",
+  retailPrice: "prices.retail.price",
+  comparablePrice: "prices.retail.comparable",
 };
 
 const FoodPricesTable = () => {
-  const [products, setProducts] = useState([]);
+  const { products, loading } = useFetchProducts();
   const [displayedProducts, setDisplayedProducts] = useState([]);
   const [showDiscountPrice, setShowDiscountPrice] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState("");
   const [pageIndex, setPageIndex] = useState(0);
-  const [pageSize, setPageSizeState] = useState(10); 
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await api.get('/products');
-        const data = response.data;
-
-        if (Array.isArray(data)) {
-          setProducts(data);
-          setDisplayedProducts(data.map(product => ({
-            ...product,
-            displayPrice: product.prices.retail.price,
-            displayComparablePrice: product.prices.retail.comparable
-          })));
-        } else {
-          console.error('Data is not an array:', data);
-        }
-
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
+  const [pageSize, setPageSizeState] = useState(10);
 
   const updateDisplayedProducts = useCallback((data, showDiscount) => {
-    const updatedData = data.map(product => ({
+    const updatedData = data.map((product) => ({
       ...product,
-      displayPrice: showDiscount && product.prices.discount?.price != null ? product.prices.discount.price : product.prices.retail.price,
-      displayComparablePrice: showDiscount && product.prices.discount?.comparable != null ? product.prices.discount.comparable : product.prices.retail.comparable
+      displayPrice:
+        showDiscount && product.prices.discount?.price != null
+          ? product.prices.discount.price
+          : product.prices.retail.price,
+      displayComparablePrice:
+        showDiscount && product.prices.discount?.comparable != null
+          ? product.prices.discount.comparable
+          : product.prices.retail.comparable,
     }));
     setDisplayedProducts(updatedData);
   }, []);
@@ -68,55 +51,69 @@ const FoodPricesTable = () => {
   const columns = useMemo(
     () => [
       {
-        Header: 'Produkts',
+        Header: "Produkts",
         accessor: accessors.title,
-        width: '4',
+        width: "4",
         Cell: ({ row }) => (
           <div>
             <span
-              className={`badge me-2 ${storeColorMap[row.original.store_name] || 'bg-info'}`}
-              style={{ fontSize: '0.75em' }}
-            >
+              className={`badge me-2 ${
+                storeColorMap[row.original.store_name] || "bg-info"
+              }`}
+              style={{ fontSize: "0.75em" }}>
               {row.original.store_name}
             </span>
             {row.original.title}
           </div>
-        )
+        ),
       },
       {
-        Header: 'Kategorija',
+        Header: "Kategorija",
         accessor: accessors.category,
-        width: '2'
+        width: "2",
       },
       {
-        Header: 'Cena',
-        accessor: 'displayPrice',
+        Header: "Cena",
+        accessor: "displayPrice",
         Cell: ({ row }) => {
           const price = parseFloat(row.original.displayPrice);
           return (
             <div>
-              {!isNaN(price) ? `€${price.toFixed(2)}` : '-'}
-              {showDiscountPrice && row.original.prices.discount && row.original.prices.discount.discount_percentage && (
-                <span className="badge bg-success ms-2" style={{ fontSize: '0.75em' }}>-{row.original.prices.discount.discount_percentage}%</span>
-              )}
+              {!isNaN(price) ? `€${price.toFixed(2)}` : "-"}
+              {showDiscountPrice &&
+                row.original.prices.discount &&
+                row.original.prices.discount.discount_percentage && (
+                  <span
+                    className="badge bg-success ms-2"
+                    style={{ fontSize: "0.75em" }}>
+                    -{row.original.prices.discount.discount_percentage}%
+                  </span>
+                )}
             </div>
           );
         },
-        width: '1',
-        sortType: createCustomSort('displayPrice')
+        width: "1",
+        sortType: createCustomSort("displayPrice"),
       },
       {
-        Header: 'Par vienību',
-        accessor: 'displayComparablePrice',
+        Header: "Par vienību",
+        accessor: "displayComparablePrice",
         Cell: ({ row }) => {
-          const comparablePrice = row.original.displayComparablePrice != null ? parseFloat(row.original.displayComparablePrice) : '-';
-          return comparablePrice !== '-'
-            ? `${typeof comparablePrice === 'number' ? comparablePrice.toFixed(2) : comparablePrice} €/${row.original.prices.unit}`
-            : '-';
+          const comparablePrice =
+            row.original.displayComparablePrice != null
+              ? parseFloat(row.original.displayComparablePrice)
+              : "-";
+          return comparablePrice !== "-"
+            ? `${
+                typeof comparablePrice === "number"
+                  ? comparablePrice.toFixed(2)
+                  : comparablePrice
+              } €/${row.original.prices.unit}`
+            : "-";
         },
-        width: '1',
-        sortType: createCustomSort('displayComparablePrice')
-      }
+        width: "1",
+        sortType: createCustomSort("displayComparablePrice"),
+      },
     ],
     [showDiscountPrice]
   );
@@ -135,76 +132,105 @@ const FoodPricesTable = () => {
     previousPage,
     state,
     setGlobalFilter,
-    setPageSize: setTablePageSize
+    setPageSize: setTablePageSize,
   } = useTable(
     {
       columns,
       data: displayedProducts,
-      initialState: { pageIndex, pageSize } 
+      initialState: { pageIndex, pageSize },
     },
     useGlobalFilter,
     useSortBy,
     usePagination
   );
 
-  const debouncedSetGlobalFilter = useMemo(() =>
-    debounce((value) => {
-      setGlobalFilter(value || undefined);
-    }, 300),
+  const debouncedSetGlobalFilter = useMemo(
+    () =>
+      debounce((value) => {
+        setGlobalFilter(value || undefined);
+      }, 300),
     [setGlobalFilter]
   );
 
   useEffect(() => {
     updateDisplayedProducts(products, showDiscountPrice);
-    debouncedSetGlobalFilter(searchValue); 
-  }, [products, showDiscountPrice, searchValue, updateDisplayedProducts, debouncedSetGlobalFilter]);
+    debouncedSetGlobalFilter(searchValue);
+  }, [
+    products,
+    showDiscountPrice,
+    searchValue,
+    updateDisplayedProducts,
+    debouncedSetGlobalFilter,
+  ]);
 
   const handleCheckboxChange = useCallback(() => {
-    setShowDiscountPrice(prev => !prev);
+    setShowDiscountPrice((prev) => !prev);
   }, []);
 
-  const handleSearchChange = useCallback((value) => {
-    setSearchValue(value);
-    setPageIndex(0); 
-    gotoPage(0);
-    debouncedSetGlobalFilter(value);
-  }, [debouncedSetGlobalFilter, gotoPage]);
+  const handleSearchChange = useCallback(
+    (value) => {
+      setSearchValue(value);
+      setPageIndex(0);
+      gotoPage(0);
+      debouncedSetGlobalFilter(value);
+    },
+    [debouncedSetGlobalFilter, gotoPage]
+  );
 
   const handleClearSearch = useCallback(() => {
-    setSearchValue('');
-    setPageIndex(0); 
-    gotoPage(0); 
-    setGlobalFilter('');
+    setSearchValue("");
+    setPageIndex(0);
+    gotoPage(0);
+    setGlobalFilter("");
   }, [setGlobalFilter, gotoPage]);
 
-  const handlePageSizeChange = useCallback((newPageSize) => {
-    setPageSizeState(newPageSize);
-    setTablePageSize(newPageSize);
-  }, [setTablePageSize]);
+  const handlePageSizeChange = useCallback(
+    (newPageSize) => {
+      setPageSizeState(newPageSize);
+      setTablePageSize(newPageSize);
+    },
+    [setTablePageSize]
+  );
 
   useEffect(() => {
-    setPageIndex(state.pageIndex); 
+    setPageIndex(state.pageIndex);
   }, [state.pageIndex]);
 
-  const productsTableProps = useMemo(() => ({
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    prepareRow,
-    page
-  }), [getTableProps, getTableBodyProps, headerGroups, prepareRow, page]);
+  const productsTableProps = useMemo(
+    () => ({
+      getTableProps,
+      getTableBodyProps,
+      headerGroups,
+      prepareRow,
+      page,
+    }),
+    [getTableProps, getTableBodyProps, headerGroups, prepareRow, page]
+  );
 
-  const paginationProps = useMemo(() => ({
-    pageIndex,
-    pageOptions,
-    canPreviousPage,
-    canNextPage,
-    previousPage,
-    nextPage,
-    gotoPage,
-    pageSize,
-    setPageSize: handlePageSizeChange
-  }), [pageIndex, pageOptions, canPreviousPage, canNextPage, previousPage, nextPage, gotoPage, pageSize, handlePageSizeChange]);
+  const paginationProps = useMemo(
+    () => ({
+      pageIndex,
+      pageOptions,
+      canPreviousPage,
+      canNextPage,
+      previousPage,
+      nextPage,
+      gotoPage,
+      pageSize,
+      setPageSize: handlePageSizeChange,
+    }),
+    [
+      pageIndex,
+      pageOptions,
+      canPreviousPage,
+      canNextPage,
+      previousPage,
+      nextPage,
+      gotoPage,
+      pageSize,
+      handlePageSizeChange,
+    ]
+  );
 
   if (loading) {
     return (
@@ -224,14 +250,16 @@ const FoodPricesTable = () => {
         />
         <div className="filter-section mb-2">
           <div className="form-check">
-            <input 
-              className="form-check-input" 
-              type="checkbox" 
-              checked={showDiscountPrice} 
-              onChange={handleCheckboxChange} 
-              id="showDiscountPriceCheckbox" 
+            <input
+              className="form-check-input"
+              type="checkbox"
+              checked={showDiscountPrice}
+              onChange={handleCheckboxChange}
+              id="showDiscountPriceCheckbox"
             />
-            <label className="form-check-label" htmlFor="showDiscountPriceCheckbox">
+            <label
+              className="form-check-label"
+              htmlFor="showDiscountPriceCheckbox">
               Atlaižu cenas
             </label>
           </div>
