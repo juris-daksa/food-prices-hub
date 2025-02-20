@@ -28,7 +28,7 @@ const FoodPricesTable = () => {
   const [loading, setLoading] = useState(true);
   const [searchValue, setSearchValue] = useState('');
   const [pageIndex, setPageIndex] = useState(0);
-  const [pageSize, setPageSizeState] = useState(10); // Add state for page size
+  const [pageSize, setPageSizeState] = useState(10); 
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -140,7 +140,7 @@ const FoodPricesTable = () => {
     {
       columns,
       data: displayedProducts,
-      initialState: { pageIndex, pageSize } // Initialize with current page index and page size
+      initialState: { pageIndex, pageSize } 
     },
     useGlobalFilter,
     useSortBy,
@@ -156,7 +156,7 @@ const FoodPricesTable = () => {
 
   useEffect(() => {
     updateDisplayedProducts(products, showDiscountPrice);
-    debouncedSetGlobalFilter(searchValue); // Apply search filter after updating displayed products
+    debouncedSetGlobalFilter(searchValue); 
   }, [products, showDiscountPrice, searchValue, updateDisplayedProducts, debouncedSetGlobalFilter]);
 
   const handleCheckboxChange = useCallback(() => {
@@ -165,15 +165,17 @@ const FoodPricesTable = () => {
 
   const handleSearchChange = useCallback((value) => {
     setSearchValue(value);
-    setPageIndex(0); // Reset page index to 0 when searching
+    setPageIndex(0); 
+    gotoPage(0);
     debouncedSetGlobalFilter(value);
-  }, [debouncedSetGlobalFilter]);
+  }, [debouncedSetGlobalFilter, gotoPage]);
 
   const handleClearSearch = useCallback(() => {
     setSearchValue('');
-    setPageIndex(0); // Reset page index to 0 when clearing search
+    setPageIndex(0); 
+    gotoPage(0); 
     setGlobalFilter('');
-  }, [setGlobalFilter]);
+  }, [setGlobalFilter, gotoPage]);
 
   const handlePageSizeChange = useCallback((newPageSize) => {
     setPageSizeState(newPageSize);
@@ -181,7 +183,7 @@ const FoodPricesTable = () => {
   }, [setTablePageSize]);
 
   useEffect(() => {
-    setPageIndex(state.pageIndex); // Preserve page index
+    setPageIndex(state.pageIndex); 
   }, [state.pageIndex]);
 
   const productsTableProps = useMemo(() => ({
