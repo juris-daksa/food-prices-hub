@@ -1,4 +1,3 @@
-
 /**
  * Debounce function to delay the processing of the input until the user has stopped typing.
  * @param {Function} func - The function to be debounced.
@@ -6,13 +5,13 @@
  * @returns {Function} - Returns a new debounced function.
  */
 export const debounce = (func, wait) => {
-    let timeout;
-    return (...args) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => func(...args), wait);
-    };
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
   };
-  
+};
+
 /**
  * Custom sorting function to handle null values and sort numbers in ascending order.
  * @param {Object} rowA - The first row to compare.
@@ -21,7 +20,9 @@ export const debounce = (func, wait) => {
  * @returns {number} - Returns the comparison result.
  */
 const customSort = (rowA, rowB, accessor) => {
-  const getValue = (row) => accessor.split('.').reduce((obj, key) => obj && obj[key], row.original) ?? Infinity;
+  const getValue = (row) =>
+    accessor.split(".").reduce((obj, key) => obj && obj[key], row.original) ??
+    Infinity;
   const a = getValue(rowA);
   const b = getValue(rowB);
   return parseFloat(a) - parseFloat(b);
@@ -32,4 +33,5 @@ const customSort = (rowA, rowB, accessor) => {
  * @param {string} accessor - The accessor for the value to sort by.
  * @returns {Function} - Returns the custom sort function.
  */
-export const createCustomSort = (accessor) => (rowA, rowB) => customSort(rowA, rowB, accessor);
+export const createCustomSort = (accessor) => (rowA, rowB) =>
+  customSort(rowA, rowB, accessor);

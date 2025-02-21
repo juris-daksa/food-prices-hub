@@ -6,11 +6,11 @@ import {
   useGlobalFilter,
 } from "react-table";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../../styles/App.css";
-import SearchBar from "./SearchBar";
-import ProductsTable from "./ProductsTable";
-import Pagination from "./Pagination";
-import { debounce, createCustomSort } from "../../utils";
+import "./styles/FoodPricesTable.styles.scss";
+import SearchBar from "./SearchBar.component";
+import ProductsTable from "./ProductsTable.component";
+import Pagination from "./Pagination.component";
+import { debounce, createCustomSort } from "./utils/utils.js";
 import useFetchProducts from "../../hooks/useFetchProducts";
 
 const storeColorMap = {

@@ -1,0 +1,27 @@
+.search-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ccc;
+}
+
+.clear-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--bs-tertiary-color);
+
+  &:hover {
+    color: var(--bs-secondary-color);
+    text-shadow: 0 0 1px var(--bs-secondary-color);
+  }
+}

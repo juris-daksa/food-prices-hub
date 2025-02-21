@@ -8,8 +8,6 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.8",
     "bootstrap": "^5.3.3",
-    "sass": "1.83.4",
-    "mariadb": "^3.4.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-paginate": "^8.2.0",
@@ -21,9 +19,7 @@
     "start": "react-scripts start",
     "build": "npm run build-css && react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "build-css": "sass src/styles/App.scss src/styles/App.css", 
-    "watch-css": "sass --watch src/styles/App.scss src/styles/App.css"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -42,5 +38,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "css-loader": "^7.1.2",
+    "sass": "^1.85.0",
+    "sass-loader": "^16.0.5",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1"
   }
 }

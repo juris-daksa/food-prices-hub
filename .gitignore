@@ -26,3 +26,4 @@ yarn-error.log*
 server/.env
 src/styles/App.css
 src/styles/App.css.map
+/dist
