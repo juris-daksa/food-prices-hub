@@ -1,4 +1,4 @@
-@import './responsive';
+@use './responsive' as responsive;
 
 .spinner-container {
   display: flex;

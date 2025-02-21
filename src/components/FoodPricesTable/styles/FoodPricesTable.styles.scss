@@ -1,8 +1,10 @@
-@use '../../../styles/responsive' as responsive; 
-@import '../../../../node_modules/bootstrap/scss/bootstrap';
+@use '../../../styles/responsive' as responsive;
 
 $form-focus-border-color: var(--bs-gray-400);
 $form-focus-box-shadow-color: rgba(108, 117, 125, 0.6);
+
+$table-border-radius: 8px;
+$table-header-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
 .form-control {
   &:focus {
@@ -14,7 +16,7 @@ $form-focus-box-shadow-color: rgba(108, 117, 125, 0.6);
 .form-select {
   &:focus {
     border-color: $form-focus-border-color;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px $form-focus-border-color;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 4px $form-focus-border-color;
   }
 }
 
@@ -63,12 +65,12 @@ $form-focus-box-shadow-color: rgba(108, 117, 125, 0.6);
       border: none;
       justify-content: center;
       align-items: center;
-      transition: 50ms;
 
       &:hover {
         background: var(--bs-tertiary-bg);
         border: none;
         color: var(--bs-primary-color);
+        transition: 200ms;
       }
 
       &:focus {
@@ -99,11 +101,49 @@ $form-focus-box-shadow-color: rgba(108, 117, 125, 0.6);
   }
 }
 
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+  
+  thead {    
+    .table-active {
+      box-shadow: $table-header-shadow;
+      padding: 0.75rem;
+    }
+
+    tr {
+      th:first-child {
+        border-top-left-radius: $table-border-radius;
+        border-bottom-left-radius: $table-border-radius;
+      }
+
+      th:last-child {
+        border-top-right-radius: $table-border-radius;
+        border-bottom-right-radius: $table-border-radius;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      td:first-child {
+        border-top-left-radius: $table-border-radius;
+        border-bottom-left-radius: $table-border-radius;
+      }
+
+      td:last-child {
+        border-top-right-radius: $table-border-radius;
+        border-bottom-right-radius: $table-border-radius;
+      }
+    }
+  }
+}
+
 /* Mobile Styles */
 @include responsive.mobile-view {
   .container {
     width: 100%;
-    padding: 10px;
+    padding: 5px;
   }
 
   .column {
@@ -133,6 +173,7 @@ $form-focus-box-shadow-color: rgba(108, 117, 125, 0.6);
   .pagination-container {
     flex-direction: column;
     align-items: center;
+    padding: 5px;
   }
 
   .pagination {
@@ -150,6 +191,7 @@ $form-focus-box-shadow-color: rgba(108, 117, 125, 0.6);
 
   .search-container {
     width: 100%;
+    padding-inline: 5px;
   }
 }
 

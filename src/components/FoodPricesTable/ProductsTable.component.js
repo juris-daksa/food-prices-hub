@@ -2,8 +2,8 @@ import React from 'react';
 
 const ProductsTable = ({ getTableProps, getTableBodyProps, headerGroups, prepareRow, page }) => {
   return (
-    <table className="table table-hover" {...getTableProps()}>
-      <thead className="thead-dark">
+    <table className="table table-hover table-borderless" {...getTableProps()}>
+      <thead className="thead-dark table-active">
         {headerGroups.map(headerGroup => {
           const { key, ...restHeaderGroupProps } = headerGroup.getHeaderGroupProps();
           return (
@@ -27,7 +27,7 @@ const ProductsTable = ({ getTableProps, getTableBodyProps, headerGroups, prepare
           );
         })}
       </thead>
-      <tbody className="table-group-divider" {...getTableBodyProps()}>
+      <tbody {...getTableBodyProps()}>
         {page.map(row => {
           prepareRow(row);
           const { key, ...restRowProps } = row.getRowProps();

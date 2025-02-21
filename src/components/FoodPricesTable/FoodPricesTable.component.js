@@ -248,7 +248,7 @@ const FoodPricesTable = () => {
           handleSearchChange={handleSearchChange}
           handleClearSearch={handleClearSearch}
         />
-        <div className="filter-section mb-2">
+        <div className="filter-section mb-3">
           <div className="form-check">
             <input
               className="form-check-input"
