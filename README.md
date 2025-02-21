@@ -32,11 +32,7 @@ Food Prices Hub is a web application that allows users to track and compare food
     ```bash
     npm install
     ```
-    c. Compile CSS stylesheet.
-    ```bash
-    npm run build-css
-    ```
-    d. Start the client.
+    c. Start the client.
     ```bash
     npm start
     ```
