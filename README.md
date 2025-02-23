@@ -8,7 +8,8 @@ Food Prices Hub is a web application that allows users to track and compare food
     ```bash
     git clone https://github.com/juris-daksa/food-prices-hub.git
     ```
-2. For the API server:
+2. Provide a `.env` file (see [requirements](#requirements)).
+3. For the API server:
 
     a. In a new terminal instance navigate to server directory.
     ```bash
@@ -32,7 +33,11 @@ Food Prices Hub is a web application that allows users to track and compare food
     ```bash
     npm install
     ```
-    c. Start the client.
+    c. Run Webpack.
+    ```bash
+    npx webpack
+    ```
+    d. Start the client.
     ```bash
     npm start
     ```
