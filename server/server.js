@@ -5,14 +5,14 @@ const { Pool } = require('pg');
 require('dotenv').config({ path: '../.env' });
 
 const app = express();
-const port = process.env.API_PORT || 5000;
+const port = process.env.API_SERVER_PORT || 5000;
 
 app.use(morgan('combined'));
 
 const allowedOrigins = [
-  process.env.LOCAL_HOST,
-  process.env.PUBLIC_DEV_HOST,
-  process.env.PUBLIC_HOST
+  process.env.UI_LOCAL_HOST,
+  process.env.UI_PUBLIC_DEV_HOST,
+  process.env.UI_PUBLIC_HOST
 ];
 
 app.use(cors({

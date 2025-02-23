@@ -61,8 +61,10 @@ Food Prices Hub is a web application that allows users to track and compare food
     DB_PASSWORD=your_database_password
     DB_NAME=your_database_name
     
-    LOCAL_HOST=http://localhost:3000
-    PUBLIC_HOST=your_public_host
+    API_SERVER_PORT=5000
+    UI_LOCAL_HOST=http://localhost:3000
+    UI_PUBLIC_HOST=http://public.host
+    
     REACT_APP_API_HOST=http://localhost:5000    // Your database API endpoint
     ```
 - Data. Use [food-prices-scraper](https://github.com/juris-daksa/food-prices-scraper) to collect some.
