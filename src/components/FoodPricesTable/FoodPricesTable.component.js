@@ -11,9 +11,8 @@ import ProductsTable from "./ProductsTable.component";
 import Pagination from "./Pagination.component";
 import FilterSection from "./FilterSection.component";
 import { createCustomSort } from "./utils/utils";
-import { useProducts } from "../../context/ProductsProvider"
+import { useProducts } from "../../context/ProductsProvider";
 import { useSearch } from "../../context/SearchProvider";
-
 
 const storeColorMap = {
   barbora: "bg-primary",
@@ -28,14 +27,21 @@ const accessors = {
 };
 
 const FoodPricesTable = () => {
-  const { products, loading, error } = useProducts();
+  const { products } = useProducts();
   const { searchValue } = useSearch();
   const [showDiscountPrice, setShowDiscountPrice] = useState(true);
   const [showLoyaltyPrice, setShowLoyaltyPrice] = useState(true);
+  const [savedPageIndex, setSavedPageIndex] = useState(0);
+
+  const filteredProducts = useMemo(() => {
+    if (!products) return [];
+    return products.filter((product) =>
+      product.title.toLowerCase().includes(searchValue.toLowerCase())
+    );
+  }, [products, searchValue]);
 
   const displayedProducts = useMemo(() => {
-    if (!products) return [];
-    return products.map((product) => ({
+    return filteredProducts.map((product) => ({
       ...product,
       displayPrice:
         showDiscountPrice && product.prices.discount?.price != null
@@ -50,7 +56,7 @@ const FoodPricesTable = () => {
           ? product.prices.loyalty.comparable
           : product.prices.retail.comparable,
     }));
-  }, [products, showDiscountPrice, showLoyaltyPrice]);
+  }, [filteredProducts, showDiscountPrice, showLoyaltyPrice]);
 
   const columns = useMemo(
     () => [
@@ -137,7 +143,7 @@ const FoodPricesTable = () => {
     {
       columns,
       data: displayedProducts,
-      initialState: { pageIndex: 0, pageSize: 10 },
+      initialState: { pageIndex: savedPageIndex, pageSize: 10 },
     },
     useGlobalFilter,
     useSortBy,
@@ -146,33 +152,30 @@ const FoodPricesTable = () => {
 
   useEffect(() => {
     tableInstance.setGlobalFilter(searchValue);
+    setSavedPageIndex(0);
+    tableInstance.gotoPage(0);
   }, [searchValue, tableInstance]);
 
+  useEffect(() => {
+    tableInstance.gotoPage(savedPageIndex);
+  }, [savedPageIndex, tableInstance]);
 
-  if (loading) {
-    return (
-      <div className="spinner-container">
-        <div className="spinner-border" role="status"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return <div>Error: {error.message || error}</div>;
-  }
+  useEffect(() => {
+    setSavedPageIndex(tableInstance.state.pageIndex);
+  }, [showDiscountPrice, showLoyaltyPrice, tableInstance.state.pageIndex]);
 
   return (
     <div>
       <div className="table-action-container">
-          <FilterSection
-            showDiscountPrice={showDiscountPrice}
-            setShowDiscountPrice={setShowDiscountPrice}
-            showLoyaltyPrice={showLoyaltyPrice}
-            setShowLoyaltyPrice={setShowLoyaltyPrice}
-          />
+        <FilterSection
+          showDiscountPrice={showDiscountPrice}
+          setShowDiscountPrice={setShowDiscountPrice}
+          showLoyaltyPrice={showLoyaltyPrice}
+          setShowLoyaltyPrice={setShowLoyaltyPrice}
+        />
       </div>
       <div className="table-responsive">
-        <ProductsTable 
+        <ProductsTable
           getTableProps={tableInstance.getTableProps}
           getTableBodyProps={tableInstance.getTableBodyProps}
           headerGroups={tableInstance.headerGroups}
