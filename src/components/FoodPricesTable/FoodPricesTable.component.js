@@ -57,7 +57,7 @@ const FoodPricesTable = () => {
   const columns = useMemo(
     () => [
       {
-        Header: "Produkts",
+        Header: () => <span title="Kārtot pēc alfabēta">Produkts</span>,
         accessor: accessors.title,
         width: "4",
         Cell: ({ row }) => (
@@ -74,63 +74,26 @@ const FoodPricesTable = () => {
         ),
       },
       {
-        Header: "Kategorija",
+        Header: () => <span title="Kārtot pēc kategorijas">Kategorija</span>,
         accessor: accessors.category,
         width: "2",
       },
       {
-        Header: "Cena",
+        Header: () => <span title="Kārtot pēc cenas">Cena</span>,
         accessor: "displayPrice",
-        Cell: ({ row }) => {
-          const price = parseFloat(row.original.displayPrice);
-          return (
-            <div>
-              {!isNaN(price) ? `€${price.toFixed(2)}` : "-"}
-              {showDiscountPrice &&
-                row.original.prices.discount &&
-                row.original.prices.discount.discount_percentage && (
-                  <span
-                    className="badge bg-success ms-2"
-                    style={{ fontSize: "0.75em" }}>
-                    -{row.original.prices.discount.discount_percentage}%
-                  </span>
-                )}
-              {showLoyaltyPrice &&
-                row.original.prices.loyalty &&
-                row.original.prices.loyalty.loyalty_discount_percentage && (
-                  <span
-                    className="badge bg-warning ms-2"
-                    style={{ fontSize: "0.75em" }}>
-                    -{row.original.prices.loyalty.loyalty_discount_percentage}%
-                  </span>
-                )}
-            </div>
-          );
-        },
         width: "1",
         sortType: createCustomSort("displayPrice"),
       },
       {
-        Header: "Par vienību",
+        Header: () => (
+          <span title="Kārtot pēc cenas par vienību">Par vienību</span>
+        ),
         accessor: "displayComparablePrice",
-        Cell: ({ row }) => {
-          const comparablePrice =
-            row.original.displayComparablePrice != null
-              ? parseFloat(row.original.displayComparablePrice)
-              : "-";
-          return comparablePrice !== "-"
-            ? `${
-                typeof comparablePrice === "number"
-                  ? comparablePrice.toFixed(2)
-                  : comparablePrice
-              } €/${row.original.prices.unit}`
-            : "-";
-        },
         width: "1",
         sortType: createCustomSort("displayComparablePrice"),
       },
     ],
-    [showDiscountPrice, showLoyaltyPrice]
+    []
   );
 
   const {
