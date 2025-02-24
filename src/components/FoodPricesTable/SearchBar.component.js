@@ -2,7 +2,7 @@ import React from 'react';
 
 const SearchBar = ({ searchValue, handleSearchChange, handleClearSearch }) => {
   return (
-    <div className="mb-2 py-3 position-relative">
+    <div className="search-bar-container">
       <input
         className="form-control"
         value={searchValue}

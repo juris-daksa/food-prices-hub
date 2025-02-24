@@ -262,12 +262,15 @@ const FoodPricesTable = () => {
 
   return (
     <div className="container mt-4">
-      <div className="search-container">
-        <SearchBar
-          searchValue={searchValue}
-          handleSearchChange={handleSearchChange}
-          handleClearSearch={handleClearSearch}
-        />
+      <div className="table-action-container row">
+        <div class="col-sm-8 col-md-5 col-12">
+          <SearchBar
+            searchValue={searchValue}
+            handleSearchChange={handleSearchChange}
+            handleClearSearch={handleClearSearch}
+          />
+        </div>
+        <div class="col-sm-8 col-md-7 col-12">
           <FilterSection
             showDiscountPrice={showDiscountPrice}
             handleDiscountCheckboxChange={handleDiscountCheckboxChange}
