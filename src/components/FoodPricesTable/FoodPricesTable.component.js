@@ -5,14 +5,14 @@ import {
   usePagination,
   useGlobalFilter,
 } from "react-table";
+import { debounce, createCustomSort } from "./utils/utils.js";
+import { useProducts } from "../../context/ProductsProvider";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/FoodPricesTable.styles.scss";
 import SearchBar from "./SearchBar.component";
 import ProductsTable from "./ProductsTable.component";
 import Pagination from "./Pagination.component";
 import FilterSection from "./FilterSection.component";
-import { debounce, createCustomSort } from "./utils/utils.js";
-import useFetchProducts from "../../hooks/useFetchProducts";
 
 const storeColorMap = {
   barbora: "bg-primary",
@@ -27,7 +27,7 @@ const accessors = {
 };
 
 const FoodPricesTable = () => {
-  const { products, loading } = useFetchProducts();
+  const { products, loading, error } = useProducts();   
   const [displayedProducts, setDisplayedProducts] = useState([]);
   const [showDiscountPrice, setShowDiscountPrice] = useState(true);
   const [showLoyaltyPrice, setShowLoyaltyPrice] = useState(true);
@@ -260,6 +260,10 @@ const FoodPricesTable = () => {
         <div className="spinner-border" role="status"></div>
       </div>
     );
+  }
+
+  if (error) {
+    return <div>Error: {error.message || error}</div>;
   }
 
   return (
