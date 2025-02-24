@@ -217,7 +217,6 @@ $table-header-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 @include responsive.tablet-and-desktop-view {
   .container {
     width: 80%;
-    margin: auto;
   }
 
   .table th {

@@ -2,9 +2,9 @@ import React from 'react';
 
 const FilterSection = ({
   showDiscountPrice,
-  handleDiscountCheckboxChange,
+  setShowDiscountPrice,
   showLoyaltyPrice,
-  handleLoyaltyCheckboxChange      
+  setShowLoyaltyPrice      
 }) => {
   return (
     <div className="filter-section">
@@ -13,7 +13,7 @@ const FilterSection = ({
           className="form-check-input"
           type="checkbox"
           checked={showDiscountPrice}
-          onChange={handleDiscountCheckboxChange}
+          onChange={() => setShowDiscountPrice((prev) => !prev)}
           id="showDiscountPriceCheckbox"
         />
         <label
@@ -27,7 +27,7 @@ const FilterSection = ({
           className="form-check-input"
           type="checkbox"
           checked={showLoyaltyPrice}
-          onChange={handleLoyaltyCheckboxChange}
+          onChange={() => setShowLoyaltyPrice((prev) => !prev)}
           id="showLoyaltyPriceCheckbox"
         />
         <label

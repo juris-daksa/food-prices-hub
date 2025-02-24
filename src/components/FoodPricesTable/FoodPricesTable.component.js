@@ -1,18 +1,19 @@
-import React, { useMemo, useCallback, useEffect, useState } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import {
   useTable,
   useSortBy,
   usePagination,
   useGlobalFilter,
 } from "react-table";
-import { debounce, createCustomSort } from "./utils/utils.js";
-import { useProducts } from "../../context/ProductsProvider";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/FoodPricesTable.styles.scss";
-import SearchBar from "./SearchBar.component";
 import ProductsTable from "./ProductsTable.component";
 import Pagination from "./Pagination.component";
 import FilterSection from "./FilterSection.component";
+import { createCustomSort } from "./utils/utils";
+import { useProducts } from "../../context/ProductsProvider"
+import { useSearch } from "../../context/SearchProvider";
+
 
 const storeColorMap = {
   barbora: "bg-primary",
@@ -27,32 +28,29 @@ const accessors = {
 };
 
 const FoodPricesTable = () => {
-  const { products, loading, error } = useProducts();   
-  const [displayedProducts, setDisplayedProducts] = useState([]);
+  const { products, loading, error } = useProducts();
+  const { searchValue } = useSearch();
   const [showDiscountPrice, setShowDiscountPrice] = useState(true);
   const [showLoyaltyPrice, setShowLoyaltyPrice] = useState(true);
-  const [searchValue, setSearchValue] = useState("");
-  const [pageIndex, setPageIndex] = useState(0);
-  const [pageSize, setPageSizeState] = useState(10);
 
-  const updateDisplayedProducts = useCallback((data, showDiscount, showLoyalty) => {
-    const updatedData = data.map((product) => ({
+  const displayedProducts = useMemo(() => {
+    if (!products) return [];
+    return products.map((product) => ({
       ...product,
       displayPrice:
-        showDiscount && product.prices.discount?.price != null
+        showDiscountPrice && product.prices.discount?.price != null
           ? product.prices.discount.price
-          : showLoyalty && product.prices.loyalty?.price != null
+          : showLoyaltyPrice && product.prices.loyalty?.price != null
           ? product.prices.loyalty.price
           : product.prices.retail.price,
       displayComparablePrice:
-        showDiscount && product.prices.discount?.comparable != null
+        showDiscountPrice && product.prices.discount?.comparable != null
           ? product.prices.discount.comparable
-          : showLoyalty && product.prices.loyalty?.comparable != null
+          : showLoyaltyPrice && product.prices.loyalty?.comparable != null
           ? product.prices.loyalty.comparable
           : product.prices.retail.comparable,
     }));
-    setDisplayedProducts(updatedData);
-  }, []);
+  }, [products, showDiscountPrice, showLoyaltyPrice]);
 
   const columns = useMemo(
     () => [
@@ -113,8 +111,7 @@ const FoodPricesTable = () => {
       {
         Header: () => (
           <span title="Kārtot pēc cenas par vienību">Par vienību</span>
-        ),        
-        accessor: "displayComparablePrice",
+        ),
         Cell: ({ row }) => {
           const comparablePrice =
             row.original.displayComparablePrice != null
@@ -128,6 +125,7 @@ const FoodPricesTable = () => {
               } €/${row.original.prices.unit}`
             : "-";
         },
+        accessor: "displayComparablePrice",
         width: "1",
         sortType: createCustomSort("displayComparablePrice"),
       },
@@ -135,124 +133,21 @@ const FoodPricesTable = () => {
     [showDiscountPrice, showLoyaltyPrice]
   );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    prepareRow,
-    page,
-    canPreviousPage,
-    canNextPage,
-    pageOptions,
-    gotoPage,
-    nextPage,
-    previousPage,
-    state,
-    setGlobalFilter,
-    setPageSize: setTablePageSize,
-  } = useTable(
+  const tableInstance = useTable(
     {
       columns,
       data: displayedProducts,
-      initialState: { pageIndex, pageSize },
+      initialState: { pageIndex: 0, pageSize: 10 },
     },
     useGlobalFilter,
     useSortBy,
     usePagination
   );
 
-  const debouncedSetGlobalFilter = useMemo(
-    () =>
-      debounce((value) => {
-        setGlobalFilter(value || undefined);
-      }, 300),
-    [setGlobalFilter]
-  );
-
   useEffect(() => {
-    updateDisplayedProducts(products, showDiscountPrice, showLoyaltyPrice);
-    debouncedSetGlobalFilter(searchValue);
-  }, [
-    products,
-    showDiscountPrice,
-    showLoyaltyPrice,
-    searchValue,
-    updateDisplayedProducts,
-    debouncedSetGlobalFilter,
-  ]);
+    tableInstance.setGlobalFilter(searchValue);
+  }, [searchValue, tableInstance]);
 
-  const handleDiscountCheckboxChange = useCallback(() => {
-    setShowDiscountPrice((prev) => !prev);
-  }, []);
-
-  const handleLoyaltyCheckboxChange = useCallback(() => {
-    setShowLoyaltyPrice((prev) => !prev);
-  }, []);
-
-  const handleSearchChange = useCallback(
-    (value) => {
-      setSearchValue(value);
-      setPageIndex(0);
-      gotoPage(0);
-      debouncedSetGlobalFilter(value);
-    },
-    [debouncedSetGlobalFilter, gotoPage]
-  );
-
-  const handleClearSearch = useCallback(() => {
-    setSearchValue("");
-    setPageIndex(0);
-    gotoPage(0);
-    setGlobalFilter("");
-  }, [setGlobalFilter, gotoPage]);
-
-  const handlePageSizeChange = useCallback(
-    (newPageSize) => {
-      setPageSizeState(newPageSize);
-      setTablePageSize(newPageSize);
-    },
-    [setTablePageSize]
-  );
-
-  useEffect(() => {
-    setPageIndex(state.pageIndex);
-  }, [state.pageIndex]);
-
-  const productsTableProps = useMemo(
-    () => ({
-      getTableProps,
-      getTableBodyProps,
-      headerGroups,
-      prepareRow,
-      page,
-    }),
-    [getTableProps, getTableBodyProps, headerGroups, prepareRow, page]
-  );
-
-  const paginationProps = useMemo(
-    () => ({
-      pageIndex,
-      pageOptions,
-      canPreviousPage,
-      canNextPage,
-      previousPage,
-      nextPage,
-      gotoPage,
-      pageSize,
-      setPageSize: handlePageSizeChange,
-    }),
-    [
-      pageIndex,
-      pageOptions,
-      canPreviousPage,
-      canNextPage,
-      previousPage,
-      nextPage,
-      gotoPage,
-      pageSize,
-      handlePageSizeChange,
-    ]
-  );
 
   if (loading) {
     return (
@@ -267,30 +162,35 @@ const FoodPricesTable = () => {
   }
 
   return (
-    <div className="container mt-4">
-      <div className="table-action-container row">
-        <div class="col-sm-8 col-md-5 col-12">
-          <SearchBar
-            searchValue={searchValue}
-            handleSearchChange={handleSearchChange}
-            handleClearSearch={handleClearSearch}
-          />
-        </div>
-        <div class="col-sm-8 col-md-7 col-12">
+    <div>
+      <div className="table-action-container">
           <FilterSection
             showDiscountPrice={showDiscountPrice}
-            handleDiscountCheckboxChange={handleDiscountCheckboxChange}
+            setShowDiscountPrice={setShowDiscountPrice}
             showLoyaltyPrice={showLoyaltyPrice}
-            handleLoyaltyCheckboxChange={handleLoyaltyCheckboxChange}
+            setShowLoyaltyPrice={setShowLoyaltyPrice}
           />
-        </div>
       </div>
-
       <div className="table-responsive">
-        <ProductsTable {...productsTableProps} />
+        <ProductsTable 
+          getTableProps={tableInstance.getTableProps}
+          getTableBodyProps={tableInstance.getTableBodyProps}
+          headerGroups={tableInstance.headerGroups}
+          prepareRow={tableInstance.prepareRow}
+          page={tableInstance.page}
+        />
       </div>
-
-      <Pagination {...paginationProps} />
+      <Pagination
+        pageIndex={tableInstance.state.pageIndex}
+        pageOptions={tableInstance.pageOptions}
+        canPreviousPage={tableInstance.canPreviousPage}
+        canNextPage={tableInstance.canNextPage}
+        previousPage={tableInstance.previousPage}
+        nextPage={tableInstance.nextPage}
+        gotoPage={tableInstance.gotoPage}
+        pageSize={tableInstance.state.pageSize}
+        setPageSize={tableInstance.setPageSize}
+      />
     </div>
   );
 };
