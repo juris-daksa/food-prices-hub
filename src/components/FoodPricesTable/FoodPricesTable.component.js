@@ -10,6 +10,7 @@ import "./styles/FoodPricesTable.styles.scss";
 import SearchBar from "./SearchBar.component";
 import ProductsTable from "./ProductsTable.component";
 import Pagination from "./Pagination.component";
+import FilterSection from "./FilterSection.component";
 import { debounce, createCustomSort } from "./utils/utils.js";
 import useFetchProducts from "../../hooks/useFetchProducts";
 
@@ -163,7 +164,7 @@ const FoodPricesTable = () => {
     debouncedSetGlobalFilter,
   ]);
 
-  const handleCheckboxChange = useCallback(() => {
+  const handleDiscountCheckboxChange = useCallback(() => {
     setShowDiscountPrice((prev) => !prev);
   }, []);
 
@@ -248,21 +249,10 @@ const FoodPricesTable = () => {
           handleSearchChange={handleSearchChange}
           handleClearSearch={handleClearSearch}
         />
-        <div className="filter-section mb-3">
-          <div className="form-check">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              checked={showDiscountPrice}
-              onChange={handleCheckboxChange}
-              id="showDiscountPriceCheckbox"
-            />
-            <label
-              className="form-check-label"
-              htmlFor="showDiscountPriceCheckbox">
-              Atlaižu cenas
-            </label>
-          </div>
+          <FilterSection
+            showDiscountPrice={showDiscountPrice}
+            handleDiscountCheckboxChange={handleDiscountCheckboxChange}
+          />
         </div>
       </div>
 
