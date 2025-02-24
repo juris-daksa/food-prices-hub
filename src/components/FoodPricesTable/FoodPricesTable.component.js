@@ -30,20 +30,25 @@ const FoodPricesTable = () => {
   const { products, loading } = useFetchProducts();
   const [displayedProducts, setDisplayedProducts] = useState([]);
   const [showDiscountPrice, setShowDiscountPrice] = useState(true);
+  const [showLoyaltyPrice, setShowLoyaltyPrice] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSizeState] = useState(10);
 
-  const updateDisplayedProducts = useCallback((data, showDiscount) => {
+  const updateDisplayedProducts = useCallback((data, showDiscount, showLoyalty) => {
     const updatedData = data.map((product) => ({
       ...product,
       displayPrice:
         showDiscount && product.prices.discount?.price != null
           ? product.prices.discount.price
+          : showLoyalty && product.prices.loyalty?.price != null
+          ? product.prices.loyalty.price
           : product.prices.retail.price,
       displayComparablePrice:
         showDiscount && product.prices.discount?.comparable != null
           ? product.prices.discount.comparable
+          : showLoyalty && product.prices.loyalty?.comparable != null
+          ? product.prices.loyalty.comparable
           : product.prices.retail.comparable,
     }));
     setDisplayedProducts(updatedData);
@@ -90,6 +95,15 @@ const FoodPricesTable = () => {
                     -{row.original.prices.discount.discount_percentage}%
                   </span>
                 )}
+              {showLoyaltyPrice &&
+                row.original.prices.loyalty &&
+                row.original.prices.loyalty.loyalty_discount_percentage && (
+                  <span
+                    className="badge bg-warning ms-2"
+                    style={{ fontSize: "0.75em" }}>
+                    -{row.original.prices.loyalty.loyalty_discount_percentage}%
+                  </span>
+                )}
             </div>
           );
         },
@@ -116,7 +130,7 @@ const FoodPricesTable = () => {
         sortType: createCustomSort("displayComparablePrice"),
       },
     ],
-    [showDiscountPrice]
+    [showDiscountPrice, showLoyaltyPrice]
   );
 
   const {
@@ -154,11 +168,12 @@ const FoodPricesTable = () => {
   );
 
   useEffect(() => {
-    updateDisplayedProducts(products, showDiscountPrice);
+    updateDisplayedProducts(products, showDiscountPrice, showLoyaltyPrice);
     debouncedSetGlobalFilter(searchValue);
   }, [
     products,
     showDiscountPrice,
+    showLoyaltyPrice,
     searchValue,
     updateDisplayedProducts,
     debouncedSetGlobalFilter,
@@ -166,6 +181,10 @@ const FoodPricesTable = () => {
 
   const handleDiscountCheckboxChange = useCallback(() => {
     setShowDiscountPrice((prev) => !prev);
+  }, []);
+
+  const handleLoyaltyCheckboxChange = useCallback(() => {
+    setShowLoyaltyPrice((prev) => !prev);
   }, []);
 
   const handleSearchChange = useCallback(
@@ -252,6 +271,8 @@ const FoodPricesTable = () => {
           <FilterSection
             showDiscountPrice={showDiscountPrice}
             handleDiscountCheckboxChange={handleDiscountCheckboxChange}
+            showLoyaltyPrice={showLoyaltyPrice}
+            handleLoyaltyCheckboxChange={handleLoyaltyCheckboxChange}
           />
         </div>
       </div>
