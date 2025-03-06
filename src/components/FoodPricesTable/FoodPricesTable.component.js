@@ -17,6 +17,8 @@ import { useSearch } from "../../context/SearchProvider";
 const storeColorMap = {
   barbora: "bg-primary",
   rimi: "bg-danger",
+  gemoss: "bg-info",
+  cesars: "bg-success"
 };
 
 const accessors = {
