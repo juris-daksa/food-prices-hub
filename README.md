@@ -6,12 +6,12 @@ Food Prices Hub is a web application that allows users to track and compare food
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/juris-daksa/food-prices-hub.git
+    git clone git@github.com:juris-daksa/food-prices-hub.git
     ```
 2. Provide a `.env` file (see [requirements](#requirements)).
 3. For the API server:
 
-    a. In a new terminal instance navigate to server directory.
+    a. Navigate to server directory.
     ```bash
     cd food-prices-hub/server
     ```
@@ -25,7 +25,7 @@ Food Prices Hub is a web application that allows users to track and compare food
     ```
 4. For the client:
 
-    a. Navigate to project directory.
+    a. In a new terminal instance, navigate to project directory.
     ```bash
     cd food-prices-hub
     ```
@@ -33,13 +33,9 @@ Food Prices Hub is a web application that allows users to track and compare food
     ```bash
     npm install
     ```
-    c. Run Webpack.
+    c. Start a development instance.
     ```bash
-    npx webpack
-    ```
-    d. Start the client.
-    ```bash
-    npm start
+    npm run dev
     ```
 5. Finally, navigate to your client app in a browser (default URL is `http://localhost:3000`).
 
@@ -59,13 +55,13 @@ Food Prices Hub is a web application that allows users to track and compare food
     DB_PORT=your_database_port
     DB_USER=your_database_user
     DB_PASSWORD=your_database_password
-    DB_NAME=your_database_name
+    DB_NAME=food_prices_db
     
     API_SERVER_PORT=5000
     UI_LOCAL_HOST=http://localhost:3000
     UI_PUBLIC_HOST=http://public.host
     
-    REACT_APP_API_HOST=http://localhost:5000    // Your database API endpoint
+    VITE_API_HOST=http://localhost:5000    // Your database API endpoint
     ```
 - Data. Use [food-prices-scraper](https://github.com/juris-daksa/food-prices-scraper) to collect some.
 - Basic understanding of Latvian language.
