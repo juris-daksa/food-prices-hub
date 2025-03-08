@@ -9,7 +9,7 @@ const useFetchProducts = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await api.get("/products");
+        const response = await api.get("/api/products");
         const data = response.data;
 
         if (Array.isArray(data)) {
