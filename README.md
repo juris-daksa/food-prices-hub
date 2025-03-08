@@ -1,6 +1,6 @@
 # Food Prices Hub
 
-Food Prices Hub is a web application that allows users to track and compare food prices from various stores. 
+Food Prices Hub is a web application that allows users to track and compare food prices from various stores. A running instance could be found at [food-prices-hub.vercel.app](https://food-prices-hub.vercel.app/).
 
 ## Installation
 
@@ -48,7 +48,7 @@ Food Prices Hub is a web application that allows users to track and compare food
 
 ## Requirements
 
-- A PostgreSQL database instance is required.
+- A PostgreSQL database is required.
 - A `.env` file needs to be provided inside project root directory with the following environment variables:
     ```plaintext
     DB_HOST=your_database_host
