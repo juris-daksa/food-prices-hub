@@ -27,7 +27,7 @@ app.use(cors({
   methods: 'GET',
   preflightContinue: false,
   optionsSuccessStatus: 204,
-  allowedHeaders: ['CF-Access-Client-Id', 'CF-Access-Client-Secret']
+  allowedHeaders: ['Content-Type', 'Authorization', 'CF-Access-Client-Id', 'CF-Access-Client-Secret']
 }));
 
 const pool = new Pool({
