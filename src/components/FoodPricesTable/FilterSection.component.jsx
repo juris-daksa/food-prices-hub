@@ -1,10 +1,12 @@
-import React from 'react';
+import React from "react";
 
 const FilterSection = ({
   showDiscountPrice,
   setShowDiscountPrice,
   showLoyaltyPrice,
-  setShowLoyaltyPrice      
+  setShowLoyaltyPrice,
+  filterDiscounts,
+  setFilterDiscounts,
 }) => {
   return (
     <div className="filter-section">
@@ -18,7 +20,8 @@ const FilterSection = ({
         />
         <label
           className="form-check-label"
-          htmlFor="showDiscountPriceCheckbox">
+          htmlFor="showDiscountPriceCheckbox"
+        >
           Atlaižu cenas
         </label>
       </div>
@@ -32,9 +35,32 @@ const FilterSection = ({
         />
         <label
           className="form-check-label"
-          htmlFor="showLoyaltyPriceCheckbox">
+          htmlFor="showLoyaltyPriceCheckbox"
+        >
           Klienta cenas
         </label>
+      </div>
+      
+      <div className="mb-2">
+        {filterDiscounts ? (
+          <button
+            type="button"
+            className="btn btn-sm badge bg-success me-2"
+            style={{ fontSize: "0.75em", cursor: "pointer" }}
+            onClick={() => setFilterDiscounts(false)}
+          >
+            Atlaides %
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="btn btn-sm badge bg-secondary me-2"
+            style={{ fontSize: "0.75em", cursor: "pointer" }}
+            onClick={() => setFilterDiscounts(true)}
+          >
+            Atlaides %
+          </button>
+        )}
       </div>
     </div>
   );

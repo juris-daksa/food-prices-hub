@@ -1,4 +1,3 @@
-
 /**
  * Custom sorting function to handle null values and sort numbers in ascending order.
  * @param {Object} rowA - The first row to compare.
